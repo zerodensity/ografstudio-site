@@ -26,14 +26,16 @@
   height: 100%;
   padding: 4rem 1rem 1.5rem;
   box-sizing: border-box;
-  cursor: default;
 }
 
-/* Shrinks to the image, so the close button can sit on the image's own corner. */
+/* Shrinks to the image, so the close button can sit on the image's own corner. A click here or on
+   the caption leaves the picture open; anywhere else closes it, so only those show the plain
+   cursor. */
 .picture {
   position: relative;
   display: inline-block;
   line-height: 0;
+  cursor: default;
 }
 
 .full {
@@ -53,6 +55,7 @@
   color: var(--site-muted);
   font-size: 0.9rem;
   text-align: center;
+  cursor: auto;
 }
 
 /* Just above the image's top-right corner, clear of the screenshot, in the page's text colour on
