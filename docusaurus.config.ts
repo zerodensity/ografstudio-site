@@ -81,6 +81,11 @@ const config: Config = {
         theme: {
           customCss: './src/css/custom.css',
         },
+        // Adds Google Tag Manager to every page of production builds (not `npm start`). The
+        // container sends to Google Analytics; manage tags at tagmanager.google.com.
+        googleTagManager: {
+          containerId: 'GTM-WDKNF4GH',
+        },
       } satisfies Preset.Options,
     ],
   ],
