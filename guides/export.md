@@ -20,17 +20,25 @@ In **Preview & Export**:
 
 ## 2. Export
 
-Choose **Export .ograf.zip**. Pick the thumbnail frame, or **First OGraf step**, then export. Studio
-checks the package before writing it: the manifest, the package layout, the module and its
-lifecycle in both realtime and non-realtime playback. If a check fails, nothing is written and
-Studio tells you why.
+Choose **File → Export…**, which opens the Export section of **Preview & Export**. Set **Export
+format** to **OGraf ZIP** and choose **Export OGraf ZIP**. Pick the thumbnail frame, or **First OGraf
+step**, then export. Studio checks the package before writing it: the manifest, the package layout,
+the module and its lifecycle in both realtime and non-realtime playback. If a check fails, nothing
+is written and Studio tells you why.
 
-The ZIP includes a transparent thumbnail referenced from the manifest, licence files for bundled
-third-party code and assets, and a self-contained preview page you can open in a browser.
+**Export profile** sets the playback modes the package offers. A template with a live data
+connection starts on **Real-time playout**; choose **Dual-mode package** or **Non-real-time render**
+for frame-by-frame rendering.
 
-To export a whole template set, use **File → Export…**. A set that uses
+The ZIP includes a transparent thumbnail referenced from the manifest, and licence files for bundled
+third-party code and assets. For a preview anyone can open in a browser, set **Export format** to
+the standalone page, or to **Both files** for the ZIP and the page side by side. **Both files** is
+the default; change it in **File → Preferences → OGraf Studio → Export**.
+
+To export a whole template set, set **Export scope** to **Template set**. A set that uses
 [Transitions](/docs/user-guide/transitions/overview) becomes one coordinated `.ograf.zip`. Any other set
-becomes an `.ograf-set.zip` with a checked package for each template.
+becomes an `.ograf-set.zip` with a checked package for each template. Studio shows its progress while
+it prepares and checks the files; choose **Cancel** or press **Esc** to stop.
 
 ## 3. Test in your player
 

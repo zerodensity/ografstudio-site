@@ -56,7 +56,20 @@ const SITE_CREDITS = `
   [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
 `;
 // The site doesn't describe OGraf as a web format. Applied to imported prose, never to fenced code.
+// Studio's Export format list calls the standalone page "Standalone HTML"; here it is the
+// standalone page, and the steps name the list so readers still find it.
 const SITE_WORDING = [
+  [/\bchoose \*\*Standalone HTML\*\* to export\b/g, 'set **Export format** to the standalone page to export'],
+  [/\*\*Standalone HTML\*\* plays\b/g, 'The standalone page plays'],
+  [/\bStandalone HTML displays\b/g, 'The standalone page displays'],
+  [/\bStandalone HTML starts\b/g, 'The standalone preview page starts'],
+  [/\bsaves the HTML and ZIP separately\b/g, 'saves the page and the ZIP separately'],
+  [/\bexport that member as HTML\b/g, 'export that member as a standalone page'],
+  [/\bOpen the HTML file\b/g, 'Open the standalone page'],
+  [/\bself-contained HTML exports\b/g, 'standalone preview pages'],
+  [/\bmanifests, and standalone HTML\./g, 'manifests, and standalone preview pages.'],
+  [/\bstandalone HTML(\s+)preview\b/g, 'standalone$1preview page'],
+  [/\bthe HTML preview\b/g, 'the preview page'],
   [/\bHTML ?5 packages\b/g, 'OGraf packages'],
   [/\breal-time HTML\s+(renderer|graphic)\b/g, 'real-time $1'],
   [/\bself-contained HTML\s+preview\b/g, 'self-contained preview page'],
@@ -295,6 +308,14 @@ function firstParagraph(body) {
 
 /** Rewrites one relative link from a repository document to its place on the site. */
 function rewriteTarget(target, fromFile) {
+  // A full GitHub link to a document the site also has goes to the site's copy, like a relative link.
+  const onGitHub = /^https:\/\/github\.com\/zerodensity\/ograf-studio\/blob\/[^/]+\/([^#?]+)(?:#(.*))?$/i.exec(target);
+  if (onGitHub) {
+    const [, repoPath, hash] = onGitHub;
+    if (repoPath === USER_GUIDE && hash) return userGuideLink(hash);
+    if (routes.has(repoPath) && repoPath !== 'README.md') return `${routes.get(repoPath)}${hash ? `#${hash}` : ''}`;
+    return target;
+  }
   // A leading slash is already a place on the site: the guide's own links arrive here as routes.
   if (/^([a-z][a-z0-9+.-]*:|#|\/)/i.test(target)) return target;
   const [rawPath, hash = ''] = target.split('#');
@@ -341,8 +362,8 @@ function siteWording(markdown, fromFile) {
         : SITE_WORDING.reduce((text, [pattern, wording]) => text.replace(pattern, wording), part),
     )
     .join('');
-  const left = reworded.replace(/^```[\s\S]*?^```/gm, '').match(/.*\bHTML ?5?\b.*/);
-  if (left) console.warn(`${fromFile} still says HTML: ${left[0].trim()}`);
+  const left = reworded.replace(/^```[\s\S]*?^```/gm, '').match(/.*\bHTML ?5?\b.*/g) ?? [];
+  for (const line of left) console.warn(`${fromFile} still says HTML: ${line.trim()}`);
   return reworded;
 }
 
@@ -406,7 +427,8 @@ function prepareUserGuide() {
   const {body} = splitTitle(raw.replace(/\r\n/g, '\n'));
   let text = body.replace(/^\s*\[Back to overview\][^\n]*\n/, '');
   for (const [from, to] of REWORDS) {
-    if (!text.includes(from)) console.warn(`User guide: rewording not found: ${from.slice(0, 60)}`);
+    const found = from instanceof RegExp ? from.test(text) : text.includes(from);
+    if (!found) console.warn(`User guide: rewording not found: ${String(from).slice(0, 60)}`);
     text = text.replace(from, to);
   }
   const chunks = new Map();

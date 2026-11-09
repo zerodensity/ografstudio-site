@@ -14,13 +14,15 @@ export const CUTS = [
   {at: 'The **Templates** pane switches', name: 'Templates pane'},
   {at: '**Scene Outliner** is a separate', name: 'Scene Outliner'},
   {at: 'Expand **Shared controls and asset slots**', name: 'Shared controls and asset slots'},
-  {at: '**Export All Templates…** certifies', name: 'Export a whole set'},
+  {at: 'For a set without Transition Logic, choose **Template set**', name: 'Export a whole set'},
 
   {at: '**File → Save Template** includes', name: 'Save a template'},
   {at: '**File → Export…** opens Preview & Export, expands', name: 'Open the export options'},
   {at: '**Export .ograf.zip** opens a thumbnail', name: 'Choose the thumbnail'},
-  {at: 'Coordinated export prepares', name: 'Prepare and save'},
-  {at: 'Studio also includes a self-contained preview', name: 'The exported preview page'},
+  {at: 'When you export a template set from **File → Export…**', name: 'Prepare and save'},
+  {at: 'For **Current template**, Studio starts with', name: 'Real-time or non-real-time'},
+  // Matches the line after SITE_WORDING in the import script has reworded it.
+  {at: 'In **File → Export…**, set **Export format** to the standalone page', name: 'The exported preview page'},
   {at: 'OGraf exports include the Studio playback', name: 'Licences in exports'},
   {at: 'The preview runs executable graphic code', name: 'Trust and browser permissions'},
 
@@ -117,13 +119,14 @@ export const TITLES = {
   'Save and export': 'What each export produces',
 };
 
-/** Sentences that point somewhere only a single long page could. */
+/** Sentences that point somewhere only a single long page could. A pattern may be a RegExp. */
 export const REWORDS = [
   [
     'SVGs with companion files use the\nbundle workflow below.',
     'SVGs with companion files use the\n[bundle workflow](/docs/user-guide/layers/svg-photoshop-figma).',
   ],
-  ['For recent changes, see the [0.30.0 release notes](releases/0.30.0.md).\n', ''],
+  // Names the newest release, so it changes every release; the site lists releases itself.
+  [/For recent changes, see the \[[\w.-]+ release notes\]\(releases\/[\w.-]+\.md\)\.\n/, ''],
 ];
 
 /** Anchors that aren't headings in the source. */
@@ -397,7 +400,6 @@ export const GROUPS = [
         title: 'Coordinated packages',
         chunks: [
           'Coordinated package export',
-          'Prepare and save',
           'Custom actions for playout',
           'Non-real-time packages',
         ],
@@ -440,7 +442,9 @@ export const GROUPS = [
           'Save and export',
           'Open the export options',
           'Choose the thumbnail',
+          'Real-time or non-real-time',
           'Export a whole set',
+          'Prepare and save',
           'Licences in exports',
           'DaVinci Resolve',
         ],

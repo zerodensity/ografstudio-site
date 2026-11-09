@@ -43,6 +43,14 @@ Select layers, or use **Capture areas** to draw rectangles or freehand outlines 
 give each area its own instruction, such as "Area 1: make the background smaller". This needs a
 model that supports images.
 
+### Your prompts stay with the template
+
+Studio saves the prompts you send with the template, in its `.ogs` file and in its exports. After
+reopening a template, expand **Saved prompts** in the AI Assistant tab: **Copy** copies a prompt,
+and **Use prompt** puts it back in the message box to edit. Neither needs an AI provider set up. In
+an exported standalone page, open the controls and expand **Authoring prompts** to read them.
+Prompts from external MCP clients are saved the same way.
+
 ## External AI clients over MCP
 
 Studio's server also offers an MCP endpoint at `http://127.0.0.1:4318/mcp`. To use it from Claude

@@ -1,9 +1,9 @@
 {
   "repository": "https://github.com/zerodensity/ograf-studio",
   "ref": "stable",
-  "version": "0.30.0",
-  "commit": "04eb019456261414659fb31843b22f78fc781174",
-  "committedAt": "2026-11-07T09:24:03+03:00",
-  "latestRelease": "0.30.0",
+  "version": "0.31.0",
+  "commit": "b4c5c94c634ad69bd7f459b036d94e46e5c3705d",
+  "committedAt": "2026-11-09T09:41:37+03:00",
+  "latestRelease": "0.31.0",
   "latestPrerelease": null
 }
