@@ -340,10 +340,14 @@ function LivePlayer({
 
   const onPhone = landscapeFullscreen && window.matchMedia('(pointer: coarse)').matches;
   /**
-   * A phone's screen is too small for the bar of named buttons, so in fullscreen these graphics get a slim
-   * column of round ones instead. A tablet has room for the bar.
+   * An iPhone fills the window instead of going fullscreen, and its screen is too small for the bar of named
+   * buttons, so these graphics get a slim column of round ones there. A tablet has room for the bar.
+   * Android phones go really fullscreen and keep the bar they always had: only Exit, as these graphics
+   * have their own controls.
    */
-  const compact = onPhone && window.matchMedia('(max-width: 500px), (max-height: 500px)').matches;
+  const compact = filling && onPhone && window.matchMedia('(max-width: 500px), (max-height: 500px)').matches;
+  /** In real fullscreen a phone's bar would cover half the graphic, so it only has Exit. */
+  const fullBar = filling || !onPhone;
   /** The column fits in a black band beside the picture, so it needn't get out of the way. */
   const [besidePicture, setBesidePicture] = useState(false);
 
@@ -737,8 +741,8 @@ function LivePlayer({
         )}
         {expanded && !compact && (
           <div className={styles.fullscreenBar}>
-            {takeButtons}
-            {actionButtons}
+            {fullBar && takeButtons}
+            {fullBar && actionButtons}
             <button
               type="button"
               className="button button--secondary button--sm"
