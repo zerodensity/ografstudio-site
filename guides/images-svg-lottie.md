@@ -22,6 +22,11 @@ them, so the result is one portable image asset, and lists anything it couldn't 
 
 The SVG arrives as a single image. Its internal shapes don't become separate Studio layers.
 
+To keep the shapes and text editable instead, use **Resources → Import editable SVG**, or **Import
+PSD** for a Photoshop file. Supported shapes and simple text become Studio layers, and anything
+Studio can't edit stays as an image. See
+[SVG, Photoshop and Figma](/docs/user-guide/layers/svg-photoshop-figma) for what each import keeps.
+
 ## Lottie animations
 
 Choose **+ Lottie JSON** above the canvas. Lottie layers loop while the graphic is on air, and

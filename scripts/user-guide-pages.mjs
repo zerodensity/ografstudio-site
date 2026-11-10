@@ -29,7 +29,7 @@ export const CUTS = [
   {at: 'Studio sends a ticked template again', name: 'Keeping presets up to date'},
   {at: "Studio's server serves what", name: 'What Studio serves'},
   {at: 'Create an ElectroNode and add reusable', name: 'Input slots'},
-  {at: 'Use **Data → Operator controls** to choose the fields the page', name: 'Fields and pin types'},
+  {at: 'Use **Data → Nodos inputs** to select which operator fields', name: 'Fields and pin types'},
   {at: 'While Studio is connected to Nodos', name: 'Nodos types'},
   {at: 'An exposed data field or live-media tag cannot', name: 'Requirements and limits'},
   {at: 'For DaVinci Resolve, choose', name: 'DaVinci Resolve'},
