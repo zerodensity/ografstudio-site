@@ -208,9 +208,16 @@
 /* Fullscreen: the stage keeps 16:9, so its marks and links stay on the graphic, and the backdrop
    fills whatever the screen leaves over. iPhones can't put an element in fullscreen, so there the
    shell fills the window instead (`data-filling`). `--screen-h` is `vh` in real fullscreen, as it always
-   was, and dynamic `dvh` when filling the window, which leaves out Safari's bars. */
+   was, and dynamic `dvh` when filling the window, which leaves out Safari's bars.
+   The centring is written out in both rules: the production CSS minifier folded a shared
+   `:fullscreen, [data-filling]` rule into the filling one and dropped it from real fullscreen. */
 .stageShell:fullscreen {
   --screen-h: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0a0f1f;
 }
 
 .stageShell[data-filling='true'] {
@@ -219,10 +226,6 @@
   position: fixed;
   z-index: 1000;
   inset: 0;
-}
-
-.stageShell:fullscreen,
-.stageShell[data-filling='true'] {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -292,6 +295,48 @@
 .stageShell[data-bar-awake='false'] .fullscreenBar:not(:focus-within) {
   opacity: 0;
   pointer-events: none;
+}
+
+/*
+ * The picture on its side, for a phone or tablet held upright whose browser can't turn the screen, so the
+ * reel keeps its 16:9 landscape fit. Held sideways, this no longer applies. The shell itself can't turn:
+ * browsers forbid transforms on a fullscreen element.
+ */
+@media (orientation: portrait) {
+  .stageShell:fullscreen[data-turned='true'],
+  .stageShell[data-filling='true'][data-turned='true'] {
+    --long: min(var(--screen-h), calc(100vw * 16 / 9));
+
+    overflow: hidden;
+  }
+
+  .stageShell:fullscreen[data-turned='true'] .stage,
+  .stageShell[data-filling='true'][data-turned='true'] .stage {
+    flex-shrink: 0;
+    width: var(--long);
+    transform: rotate(90deg);
+  }
+
+  /*
+   * The player scales the graphic to how wide its box looks on screen, and on its side that's the box's
+   * height. So the box is as tall as the graphic is long, and the graphic fills its top left corner, which
+   * is the whole stage; the stage clips the rest.
+   */
+  .stageShell:fullscreen[data-turned='true'] .viewport,
+  .stageShell[data-filling='true'][data-turned='true'] .viewport {
+    right: auto;
+    width: calc(100% * 16 / 9);
+  }
+
+  /* The bar keeps to the top of the picture, which is now the right of the screen. */
+  .stageShell:fullscreen[data-turned='true'] .fullscreenBar,
+  .stageShell[data-filling='true'][data-turned='true'] .fullscreenBar {
+    top: 50%;
+    right: 0;
+    left: auto;
+    max-width: calc(var(--screen-h) - 3rem);
+    transform: translate(50%, -50%) rotate(90deg) translateY(calc(50% + 0.6rem));
+  }
 }
 
 .statusButton {

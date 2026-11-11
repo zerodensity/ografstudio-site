@@ -338,7 +338,9 @@ function LivePlayer({
     if (expanded) wakeBar();
   }, [expanded, wakeBar]);
 
-  const onPhone = landscapeFullscreen && window.matchMedia('(pointer: coarse)').matches;
+  /** Phones and tablets: in fullscreen every graphic keeps its 16:9 landscape fit, however the device is held. */
+  const touchScreen = window.matchMedia('(pointer: coarse)').matches;
+  const onPhone = landscapeFullscreen && touchScreen;
   /**
    * An iPhone fills the window instead of going fullscreen, and its screen is too small for the bar of named
    * buttons, so these graphics get a slim column of round ones there. A tablet has room for the bar.
@@ -374,7 +376,7 @@ function LivePlayer({
 
   // Android browsers can turn the screen during fullscreen, and give it back when fullscreen ends.
   const turnToLandscape = async () => {
-    if (!onPhone) return;
+    if (!touchScreen) return;
     try {
       await screen.orientation.lock('landscape');
     } catch {
@@ -405,7 +407,7 @@ function LivePlayer({
     const root = document.documentElement;
     const overflow = root.style.overflow;
     root.style.overflow = 'hidden';
-    if (onPhone) setTurned(true);
+    if (touchScreen) setTurned(true);
     const leave = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setFilling(false);
     };
@@ -415,7 +417,7 @@ function LivePlayer({
       document.removeEventListener('keydown', leave);
       setTurned(false);
     };
-  }, [filling, onPhone]);
+  }, [filling, touchScreen]);
 
   // Load the graphic once it's really on screen, or once the visitor scrolls towards it. On the homepage
   // it sits just under the fold, so being close doesn't count until they start to scroll.

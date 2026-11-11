@@ -95,6 +95,8 @@ const PARK_AFTER_MS = 4000;
 const TOUCH_HOLD_MS = 15000;
 const FOLD_KEY = 'ograf-reel-menu-folded';
 const BAR_IDLE_MS = 2500;
+/** Phones and tablets: in fullscreen the reel keeps its 16:9 landscape fit, however the device is held. */
+const isTouchScreen = () => window.matchMedia('(pointer: coarse)').matches;
 
 const TOGGLE_ICONS = {
   ticker: 'M3 8.5A1.500 1.500 0 0 1 4.500 7h15A1.500 1.500 0 0 1 21 8.500v7a1.500 1.500 0 0 1-1.500 1.500h-15A1.500 1.500 0 0 1 3 15.500zM6 11v2h7v-2zm9 0v2h3v-2z',
@@ -212,6 +214,8 @@ function Reel(): ReactNode {
   /** iPhones can't put an element in fullscreen, so there the reel fills the window instead. */
   const [filling, setFilling] = useState(false);
   const expanded = fullscreen || filling;
+  /** The browser couldn't turn the screen to landscape, so the picture turns instead. */
+  const [turned, setTurned] = useState(false);
   const [barAwake, setBarAwake] = useState(true);
   const backdrop = useBackdropStyle();
   const camera = useMonitorCamera();
@@ -449,6 +453,7 @@ function Reel(): ReactNode {
     const follow = () => {
       const on = document.fullscreenElement === shellRef.current;
       setFullscreen(on);
+      if (!on) setTurned(false);
       setHold('pointer', false);
     };
     document.addEventListener('fullscreenchange', follow);
@@ -478,18 +483,32 @@ function Reel(): ReactNode {
       document.exitFullscreen().catch(() => undefined);
       return;
     }
-    // A browser that refuses fullscreen gets the reel filling the window instead.
-    shellRef.current?.requestFullscreen().catch(() => setFilling(true));
+    // A browser that refuses fullscreen gets the reel filling the window instead. On a phone or tablet the
+    // reel keeps its 16:9 landscape fit: Android browsers can turn the screen during fullscreen, and give it
+    // back when fullscreen ends; where they can't, the picture turns.
+    shellRef.current
+      ?.requestFullscreen()
+      .then(async () => {
+        if (!isTouchScreen()) return;
+        try {
+          await screen.orientation.lock('landscape');
+        } catch {
+          setTurned(true);
+        }
+      })
+      .catch(() => setFilling(true));
   }, [filling]);
 
   // Filling the window: the page behind stays still and Esc leaves. As in fullscreen, hovering
-  // doesn't hold the slide.
+  // doesn't hold the slide. A phone held upright gets the picture on its side, since only fullscreen
+  // can turn the screen.
   useEffect(() => {
     if (!filling) return undefined;
     const root = document.documentElement;
     const overflow = root.style.overflow;
     root.style.overflow = 'hidden';
     setHold('pointer', false);
+    if (isTouchScreen()) setTurned(true);
     const leave = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setFilling(false);
     };
@@ -497,6 +516,7 @@ function Reel(): ReactNode {
     return () => {
       root.style.overflow = overflow;
       document.removeEventListener('keydown', leave);
+      setTurned(false);
     };
   }, [filling, setHold]);
 
@@ -665,6 +685,7 @@ function Reel(): ReactNode {
           style={expanded ? backdrop : undefined}
           data-bar-awake={barAwake}
           data-filling={filling}
+          data-turned={turned}
           onPointerMove={expanded ? wakeBar : undefined}>
         <div
           ref={stageRef}
