@@ -44,9 +44,12 @@ Open **Preview & Export**:
 
 ## 5. Save the project
 
-Choose **File → Save Template**, pick the frame to use for the thumbnail, then choose **Save .ogs…**
-and a location. Studio writes `Template Name.ogs`, the editable source. **Download ZIP** gives you
-the same file together with a transparent thumbnail PNG.
+Choose **File → Save** and pick a location. Studio writes `Template Name.ogs`, the editable source,
+and later saves go to the same file. **Save As…** saves it under a new name.
+
+To pick the frame used for the thumbnail, choose **File → Save Template Copy…**, set the frame, then
+choose **Save .ogs…**. **Download ZIP** there gives you the `.ogs` together with a transparent
+thumbnail PNG.
 
 Keep the `.ogs` file: it is what you reopen to make changes. When the graphic is ready for playout,
 [export an OGraf package](/guides/export).

@@ -70,6 +70,7 @@ const SITE_WORDING = [
   [/\bmanifests, and standalone HTML\./g, 'manifests, and standalone preview pages.'],
   [/\bstandalone HTML(\s+)preview\b/g, 'standalone$1preview page'],
   [/\bthe HTML preview\b/g, 'the preview page'],
+  [/\b(exported|existing)(\s+)HTML(\s+)preview(s?)\b/g, '$1$2preview$3page$4'],
   [/\bHTML ?5 packages\b/g, 'OGraf packages'],
   [/\breal-time HTML\s+(renderer|graphic)\b/g, 'real-time $1'],
   [/\bself-contained HTML\s+preview\b/g, 'self-contained preview page'],

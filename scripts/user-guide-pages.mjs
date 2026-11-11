@@ -16,7 +16,7 @@ export const CUTS = [
   {at: 'Expand **Shared controls and asset slots**', name: 'Shared controls and asset slots'},
   {at: 'For a set without Transition Logic, choose **Template set**', name: 'Export a whole set'},
 
-  {at: '**File → Save Template** includes', name: 'Save a template'},
+  {at: '**File → Save** writes to the current', name: 'Save a template'},
   {at: '**File → Export…** opens Preview & Export, expands', name: 'Open the export options'},
   {at: '**Export .ograf.zip** opens a thumbnail', name: 'Choose the thumbnail'},
   {at: 'When you export a template set from **File → Export…**', name: 'Prepare and save'},
@@ -207,7 +207,7 @@ export const GROUPS = [
       {
         slug: 'text',
         title: 'Text styles and fonts',
-        chunks: ['Mixed text styles and languages', 'Font library'],
+        chunks: ['Mixed text styles and languages', 'Text clipping margins', 'Font library'],
       },
       {slug: 'lottie', title: 'Lottie animations', chunks: ['Lottie animations']},
       {
@@ -477,7 +477,11 @@ export const GROUPS = [
         slug: 'on-a-website',
         title: 'Use an exported graphic on a website',
         label: 'On a website',
-        chunks: ['Use an exported graphic in a tutorial website'],
+        chunks: [
+          'Use an exported graphic in a tutorial website',
+          'Find a layer by export key',
+          'Receive a frame cue during playback',
+        ],
       },
       {slug: 'compatibility', title: 'Compatibility notes', chunks: ['Compatibility notes']},
     ],
