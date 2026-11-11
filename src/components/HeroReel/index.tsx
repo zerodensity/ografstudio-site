@@ -4,6 +4,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 import {OriginDetails} from '@site/src/components/ExampleOrigin';
 import graphics from '@site/src/data/graphics.json';
 import {REEL_ORIGIN} from '@site/src/data/reelOrigin';
+import {useMovableBar} from '../MovableBar';
 import {BackdropCamera, BackdropPicker, useBackdropStyle, useMonitorCamera} from '../PlayerBackdrop';
 import type {OGrafPlayer} from '../OGrafExample/ograf-player';
 import {defineReelCameraSource, setReelCameraStream} from './reelCamera';
@@ -217,6 +218,10 @@ function Reel(): ReactNode {
   /** The browser couldn't turn the screen to landscape, so the picture turns instead. */
   const [turned, setTurned] = useState(false);
   const [barAwake, setBarAwake] = useState(true);
+  // The bar starts along the top of the picture, as the ticker runs along the bottom, and the visitor can
+  // drag it anywhere. Moved off the picture it needn't get out of its way.
+  const pictureOnScreen = useCallback(() => stageRef.current?.getBoundingClientRect() ?? null, []);
+  const bar = useMovableBar('ografstudio.fullscreen-controls.reel', expanded, pictureOnScreen, turned);
   const backdrop = useBackdropStyle();
   const camera = useMonitorCamera();
 
@@ -683,7 +688,7 @@ function Reel(): ReactNode {
           ref={shellRef}
           className={styles.stageShell}
           style={expanded ? backdrop : undefined}
-          data-bar-awake={barAwake}
+          data-bar-awake={barAwake || bar.clearOfPicture}
           data-filling={filling}
           data-turned={turned}
           onPointerMove={expanded ? wakeBar : undefined}>
@@ -762,7 +767,13 @@ function Reel(): ReactNode {
           )}
         </div>
           {expanded && (
-            <div className={styles.fullscreenBar} role="group" aria-label="Reel controls">
+            <div
+              ref={bar.barRef}
+              className={styles.fullscreenBar}
+              style={bar.barStyle}
+              role="group"
+              aria-label="Reel controls">
+              {bar.grip}
               {SLIDES.map((slide, index) => (
                 <button
                   key={slide.id}

@@ -63,18 +63,23 @@
   cursor: none;
 }
 
+/*
+ * The fullscreen controls start along the top of the picture, and the grip drags them anywhere: the
+ * last translate is that move, along the picture's own axes (see MovableBar).
+ */
 .fullscreenBar {
   position: absolute;
-  bottom: 1.5rem;
+  top: 1rem;
   left: 50%;
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  align-items: center;
   justify-content: center;
   width: max-content;
   max-width: calc(100% - 3rem);
   padding: 0.6rem;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translate(var(--bar-x, 0px), var(--bar-y, 0px));
   transition: opacity 200ms;
   border-radius: 6px;
   background: rgb(5 7 13 / 85%);
@@ -93,22 +98,22 @@
 }
 
 /*
- * An iPhone's controls when the frame fills the window: a slim column of round buttons at the picture's
- * right. Android phones keep the bar in real fullscreen, as they always had. Held sideways, it
- * sits in the middle of the black band beside the picture and stays there; over the picture it fades like
- * the bar. Its width plus a margin is PHONE_CONTROLS_PX in index.tsx.
+ * An iPhone's controls when the frame fills the window: a slim row of round buttons along the top of the
+ * picture, which the grip drags anywhere, like the bar. Android phones keep the bar in real fullscreen,
+ * as they always had. Over the picture the row fades like the bar; moved into a black band beside it, it
+ * stays.
  */
 .phoneControls {
   --button: 2.75rem;
 
   position: absolute;
-  top: 50%;
-  right: max(0.5rem, calc((100vw - 100dvh * 16 / 9) / 4 - var(--button) / 2 - 0.3rem));
+  top: 0.6rem;
+  left: 50%;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 0.45rem;
   padding: 0.3rem;
-  transform: translateY(-50%);
+  transform: translateX(-50%) translate(var(--bar-x, 0px), var(--bar-y, 0px));
   transition: opacity 200ms;
   border-radius: 2rem;
   background: rgb(5 7 13 / 72%);
@@ -191,27 +196,23 @@
     transform-origin: 0 0;
   }
 
+  /* The controls keep to the top of the picture, which is now the right of the screen. */
   .frame:fullscreen[data-turned='true'] .fullscreenBar,
   .frame[data-filling='true'][data-turned='true'] .fullscreenBar {
     top: 50%;
-    bottom: auto;
-    left: 0;
+    right: 0;
+    left: auto;
     max-width: calc(var(--screen-h) - 3rem);
-    transform: translate(-50%, -50%) rotate(90deg) translateY(calc(-50% - 1rem));
+    transform: translate(50%, -50%) rotate(90deg) translateY(calc(50% + 1rem))
+      translate(var(--bar-x, 0px), var(--bar-y, 0px));
   }
 
-  /*
-   * The column turns with the picture and keeps to its right, which is now the bottom of the screen: in the
-   * band below the picture when there's room, as when the phone is held sideways. `top` is its centre.
-   */
   .frame[data-filling='true'][data-turned='true'] .phoneControls {
-    top: min(
-      calc(100dvh - 0.5rem - (var(--button) + 0.6rem) / 2),
-      calc(50dvh + var(--long) / 2 + (100dvh - var(--long)) / 4)
-    );
-    right: auto;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(90deg);
+    top: 50%;
+    right: 0;
+    left: auto;
+    transform: translate(50%, -50%) rotate(90deg) translateY(calc(50% + 0.6rem))
+      translate(var(--bar-x, 0px), var(--bar-y, 0px));
   }
 }
 

@@ -260,7 +260,8 @@
   width: max-content;
   max-width: calc(100% - 3rem);
   padding: 0.5rem;
-  transform: translateX(-50%);
+  /* The last translate is where the visitor dragged the bar, along the picture's axes (see MovableBar). */
+  transform: translateX(-50%) translate(var(--bar-x, 0px), var(--bar-y, 0px));
   transition: opacity 200ms;
   border-radius: 6px;
   background: rgb(5 7 13 / 88%);
@@ -335,7 +336,8 @@
     right: 0;
     left: auto;
     max-width: calc(var(--screen-h) - 3rem);
-    transform: translate(50%, -50%) rotate(90deg) translateY(calc(50% + 0.6rem));
+    transform: translate(50%, -50%) rotate(90deg) translateY(calc(50% + 0.6rem))
+      translate(var(--bar-x, 0px), var(--bar-y, 0px));
   }
 }
 

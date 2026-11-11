@@ -2,6 +2,7 @@ import {useCallback, useEffect, useRef, useState, type ReactNode} from 'react';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import graphics from '@site/src/data/graphics.json';
+import {useMovableBar} from '../MovableBar';
 import {BackdropCamera, BackdropPicker, useBackdropStyle} from '../PlayerBackdrop';
 import type {OGrafPlayer} from './ograf-player';
 import styles from './styles.module.css';
@@ -193,8 +194,6 @@ function FieldInput({
 
 const DATA_LEGEND = 'Operator controls — changes update the graphic live';
 const BAR_IDLE_MS = 2500;
-/** Width a phone's fullscreen controls need beside the picture, with a margin: see `.phoneControls`. */
-const PHONE_CONTROLS_PX = 66;
 /** Share of the frame on screen that loads the graphic without any scrolling. */
 const LOAD_WHEN_SEEN = 0.25;
 /** Share of the graphic and its form that counts as on screen. */
@@ -343,36 +342,29 @@ function LivePlayer({
   const onPhone = landscapeFullscreen && touchScreen;
   /**
    * An iPhone fills the window instead of going fullscreen, and its screen is too small for the bar of named
-   * buttons, so these graphics get a slim column of round ones there. A tablet has room for the bar.
+   * buttons, so these graphics get a slim row of round ones there. A tablet has room for the bar.
    * Android phones go really fullscreen and keep the bar they always had: only Exit, as these graphics
    * have their own controls.
    */
   const compact = filling && onPhone && window.matchMedia('(max-width: 500px), (max-height: 500px)').matches;
   /** In real fullscreen a phone's bar would cover half the graphic, so it only has Exit. */
   const fullBar = filling || !onPhone;
-  /** The column fits in a black band beside the picture, so it needn't get out of the way. */
-  const [besidePicture, setBesidePicture] = useState(false);
 
-  useEffect(() => {
-    if (!expanded || !compact) {
-      setBesidePicture(false);
-      return undefined;
-    }
-    const measure = () => {
-      const {innerWidth: width, innerHeight: height} = window;
-      // Sideways the bands are left and right of the picture; upright, with the picture turned, above and below.
-      const band =
-        width > height
-          ? (width - (height * 16) / 9) / 2
-          : turned
-            ? (height - Math.min(height, (width * 16) / 9)) / 2
-            : 0;
-      setBesidePicture(band >= PHONE_CONTROLS_PX);
-    };
-    measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
-  }, [expanded, compact, turned]);
+  /** Where the picture is in fullscreen: centred, and on its side when turned for a phone held upright. */
+  const pictureOnScreen = () => {
+    const {innerWidth: width, innerHeight: height} = window;
+    const long = turned && height > width ? Math.min(height, (width * 16) / 9) : Math.min(width, (height * 16) / 9);
+    const [w, h] = turned && height > width ? [(long * 9) / 16, long] : [long, (long * 9) / 16];
+    return new DOMRect((width - w) / 2, (height - h) / 2, w, h);
+  };
+  // The controls start along the top of the picture and the visitor can drag them anywhere. Moved off the
+  // picture, into a band beside it, they needn't get out of its way.
+  const bar = useMovableBar(
+    compact ? 'ografstudio.fullscreen-controls.example-phone' : 'ografstudio.fullscreen-controls.example',
+    expanded,
+    pictureOnScreen,
+    turned,
+  );
 
   // Android browsers can turn the screen during fullscreen, and give it back when fullscreen ends.
   const turnToLandscape = async () => {
@@ -691,7 +683,7 @@ function LivePlayer({
         ref={frameRef}
         className={styles.frame}
         style={backdrop}
-        data-bar-awake={barAwake || besidePicture}
+        data-bar-awake={barAwake || bar.clearOfPicture}
         data-turned={turned}
         data-letterbox={landscapeFullscreen}
         data-filling={filling}
@@ -714,8 +706,9 @@ function LivePlayer({
           </div>
         )}
         {expanded && compact && (
-          // The actions these graphics publish are buttons in the picture too, so the column leaves them out.
-          <div className={styles.phoneControls} role="group" aria-label="Controls">
+          // The actions these graphics publish are buttons in the picture too, so the row leaves them out.
+          <div ref={bar.barRef} className={styles.phoneControls} style={bar.barStyle} role="group" aria-label="Controls">
+            {bar.grip}
             <button type="button" aria-label="Take in" data-primary disabled={status !== 'off-air'} onClick={takeIn}>
               <ControlIcon kind="takeIn" />
             </button>
@@ -742,7 +735,8 @@ function LivePlayer({
           </div>
         )}
         {expanded && !compact && (
-          <div className={styles.fullscreenBar}>
+          <div ref={bar.barRef} className={styles.fullscreenBar} style={bar.barStyle} role="group" aria-label="Controls">
+            {bar.grip}
             {fullBar && takeButtons}
             {fullBar && actionButtons}
             <button

@@ -1,0 +1,37 @@
+/* The grip that drags fullscreen controls. `[data-grip]` outweighs the bars' own button rules. */
+button.grip[data-grip] {
+  display: flex;
+  flex: none;
+  align-items: center;
+  align-self: stretch;
+  justify-content: center;
+  width: 1.5rem;
+  min-height: 1.75rem;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: rgb(230 235 247 / 70%);
+  cursor: grab;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button.grip[data-grip]:hover {
+  background: rgb(255 255 255 / 10%);
+  color: #fff;
+}
+
+button.grip[data-grip]:active {
+  cursor: grabbing;
+}
+
+button.grip[data-grip] svg {
+  width: 0.65rem;
+  height: 1rem;
+  margin: 0;
+  fill: currentColor;
+  vertical-align: 0;
+}
