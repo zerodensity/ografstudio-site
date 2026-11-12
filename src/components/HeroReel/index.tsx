@@ -204,7 +204,14 @@ function Reel(): ReactNode {
 
   const [active, setActive] = useState(0);
   const [status, setStatus] = useState<Status>('loading');
-  const [started, setStarted] = useState(false);
+  // The reel only runs in the browser, so reduced motion is known on the first render, and the Play button
+  // never flashes up for visitors whose reel starts by itself.
+  const [started, setStarted] = useState(() => !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  /**
+   * The live slide has finished coming in, so it shows instead of the poster. Until then the poster stays
+   * up: the graphic starts from an empty frame, and showing it at once blanked the picture and rebuilt it.
+   */
+  const [revealed, setRevealed] = useState(false);
   const [held, setHeld] = useState(false);
   const [paused, setPaused] = useState(false);
   const [ticker, setTicker] = useState(true);
@@ -359,11 +366,9 @@ function Reel(): ReactNode {
 
   // Honour reduced motion: nothing moves until the visitor asks for it.
   useEffect(() => {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) {
-      holds.current.add('reduced-motion');
-      setHeld(true);
-    } else setStarted(true);
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    holds.current.add('reduced-motion');
+    setHeld(true);
   }, []);
 
   // Mount the real package once, and take the first slide.
@@ -380,12 +385,20 @@ function Reel(): ReactNode {
         signal: abort.signal,
       });
       if (abort.signal.aborted) return;
+      // Play takes every lane to its first state, so the ticker comes in with the first slide. Nothing else
+      // reaches the player until it's done: a slide or the ticker chosen meanwhile is taken after it, since a
+      // take during Play supersedes it, and that once stopped the reel with a false WebGL error.
+      try {
+        await player.play();
+      } catch (error) {
+        console.warn('Feature reel: the first slide was interrupted', error);
+      }
+      if (abort.signal.aborted) return;
       playerRef.current = player;
-      // Play takes every lane to its first state, so the ticker comes in with the first slide.
-      await player.play();
       if (activeRef.current !== 0) take(activeRef.current);
       if (!tickerRef.current) void player.action('transition.out', {slotId: TICKER_LANE}).catch(() => undefined);
       setStatus('on-air');
+      setRevealed(true);
       setProgressKey((key) => key + 1);
       startDwell();
     })().catch((error: unknown) => {
@@ -416,6 +429,7 @@ function Reel(): ReactNode {
             if (!playerRef.current) return;
             parked = true;
             setStatus('parked');
+            setRevealed(false);
             for (const slotId of [LANE, TICKER_LANE])
               playerRef.current.action('transition.clear', {slotId}, {skipAnimation: true}).catch(() => undefined);
           }, PARK_AFTER_MS);
@@ -426,9 +440,11 @@ function Reel(): ReactNode {
             setStatus('on-air');
             setProgressKey((key) => key + 1);
             dwell.current.remaining = SLIDES[activeRef.current].dwell;
+            // The poster stays up until the slide is back in, as when the reel starts.
             playerRef.current
               .action('transition.take', {slotId: LANE, stateId: SLIDES[activeRef.current].id})
-              .catch(() => undefined);
+              .catch(() => undefined)
+              .finally(() => setRevealed(true));
             if (tickerRef.current)
               playerRef.current
                 .action('transition.take', {slotId: TICKER_LANE, stateId: TICKER_STATE})
@@ -703,14 +719,14 @@ function Reel(): ReactNode {
           onPointerMove={onStagePointerMove}
           onPointerDown={onStagePointerDown}>
           <img
-            className={`${styles.poster} ${onAir ? styles.posterHidden : ''}`}
+            className={`${styles.poster} ${revealed ? styles.posterHidden : ''}`}
             src={posterUrl}
             alt=""
             width={1600}
             height={900}
           />
           <BackdropCamera />
-          <div ref={viewportRef} className={styles.viewport} />
+          <div ref={viewportRef} className={`${styles.viewport} ${revealed ? '' : styles.viewportWaiting}`} />
           {onAir && active === MEDIA_INDEX && !sound && (
             <button type="button" className={`${styles.stageChip} ${styles.soundChip}`} onClick={toggleSound}>
               <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -850,8 +866,26 @@ function Reel(): ReactNode {
   );
 }
 
-export default function HeroReel(): ReactNode {
+/**
+ * What the page shows before the reel can run: the poster where the picture will be, laid out as the reel
+ * lays it out, so the reel doesn't pop into an empty space as the page loads.
+ */
+function ReelPlaceholder(): ReactNode {
+  const posterUrl = useBaseUrl('/img/feature-reel-poster.webp');
   return (
-    <BrowserOnly fallback={<div className={styles.fallback} />}>{() => <Reel />}</BrowserOnly>
+    <div className={styles.reel}>
+      <div className={styles.deck}>
+        <div className={styles.console} />
+        <div className={styles.stageShell}>
+          <div className={styles.stage}>
+            <img className={styles.poster} src={posterUrl} alt="" width={1600} height={900} />
+          </div>
+        </div>
+      </div>
+    </div>
   );
+}
+
+export default function HeroReel(): ReactNode {
+  return <BrowserOnly fallback={<ReelPlaceholder />}>{() => <Reel />}</BrowserOnly>;
 }

@@ -6,6 +6,34 @@
 
 const registeredClasses = new WeakMap();
 let nextElementId = 0;
+const fontSetsAddingLoaded = new WeakSet();
+
+/**
+ * Graphics register their packaged fonts on the page's document, often under the same family names as the
+ * page's own fonts, and ask the browser to hide text until a font has loaded. Registered while still
+ * loading, such a font takes over the page's own text in that family and hides it for a moment, so the
+ * page's text blinks each time a graphic starts. Here a font joins the document only once it has loaded,
+ * before the graphic hears that it's ready, so no text waits on it.
+ */
+function addFontsOnceLoaded(fontSet) {
+  if (!fontSet || typeof fontSet.add !== 'function' || fontSetsAddingLoaded.has(fontSet)) return;
+  fontSetsAddingLoaded.add(fontSet);
+  const add = fontSet.add;
+  const waiting = new WeakSet();
+  fontSet.add = function addOnceLoaded(face) {
+    const pending = face && (face.status === 'unloaded' || face.status === 'loading');
+    if (!pending) return add.call(this, face);
+    if (!waiting.has(face)) {
+      waiting.add(face);
+      // The first callback on the face's own promise, so the face is in before the graphic goes on.
+      face.load().then(
+        () => add.call(this, face),
+        () => undefined,
+      );
+    }
+    return this;
+  };
+}
 
 function cloneDefault(value) {
   if (value === undefined) return undefined;
@@ -139,6 +167,7 @@ export async function mountOGrafGraphic(options) {
       /* Host callbacks must not interrupt the graphic. */
     }
   };
+  addFontsOnceLoaded(document.fonts);
   const pageOrigin = new URL(document.URL).origin;
   const manifestLocation = checkedUrl(manifestUrl, document.baseURI, allowCrossOrigin, pageOrigin);
   let viewport;

@@ -30,11 +30,6 @@
   --reel-shadow: rgb(38 88 220 / 28%);
 }
 
-.fallback {
-  height: var(--stage-height);
-  background: var(--reel-panel);
-}
-
 .deck {
   display: grid;
   grid-template-columns: 19.5rem minmax(0, 1fr);
@@ -416,11 +411,20 @@
 
 .posterHidden {
   opacity: 0;
+  /* Once the live slide has faded in over it, so the picture never goes blank. */
+  transition-delay: 0.4s;
 }
 
 .viewport {
   position: absolute;
   inset: 0;
+  transition: opacity 0.4s ease;
+}
+
+/* The live graphic is drawing its first slide in, unseen, while the poster stands in for it. */
+.viewportWaiting {
+  opacity: 0;
+  transition: none;
 }
 
 /* Viewfinder marks, 24 px in from each edge of the 1920x1080 canvas at any stage size. The ticker
@@ -844,11 +848,6 @@
 }
 
 @media (max-width: 1100px) {
-  .fallback {
-    height: auto;
-    aspect-ratio: 16 / 9;
-  }
-
   .deck {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -986,7 +985,8 @@
   .cueLine,
   .cue,
   .deck,
-  .poster {
+  .poster,
+  .viewport {
     transition: none;
   }
 }
