@@ -185,8 +185,6 @@ export const examples: Example[] = [
     image: '/img/examples/race-telemetry.png',
     level: 'Advanced',
     tags: ['Real data', 'Rules', 'Timer', 'Animation'],
-    // By its link only, until it is announced.
-    unlisted: true,
     notOnHomepage: true,
     origin: {
       model: 'Claude Fable 5.2',
