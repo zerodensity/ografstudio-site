@@ -7,10 +7,11 @@ description: A jury vote for a TV show. Each jury gives its points, and the grap
 import ExampleOrigin from '@site/src/components/ExampleOrigin';
 import ExampleTags from '@site/src/components/ExampleTags';
 import OGrafExample from '@site/src/components/OGrafExample';
+import {RANKINGS} from '@site/src/components/OGrafExample/rankings';
 
 <ExampleTags slug="rankings" />
 
-<OGrafExample slug="rankings" />
+<OGrafExample slug="rankings" {...RANKINGS} />
 
 <ExampleOrigin slug="rankings" />
 
@@ -20,6 +21,12 @@ ranking and slides every row to its place. Gold, silver and bronze follow whoeve
 three places.
 
 ## Try it
+
+The board runs a whole vote by itself as the page opens: five juries, then the winner, and round
+again. Press any button or the picture and it stops there, and the controls are yours. **Autoplay**
+starts it again from a clear board.
+
+To run the vote yourself, press **Start over**, then:
 
 1. Press **Next vote**. Lisbon's low scores land by themselves, one a second.
 2. Press **Next vote** again for the top score. The tile holds the moment, then gives the name.

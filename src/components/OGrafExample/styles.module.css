@@ -223,6 +223,13 @@
   vertical-align: -0.05em;
 }
 
+.buttonIcon {
+  width: 1em;
+  height: 1em;
+  margin-right: 0.25em;
+  vertical-align: -0.15em;
+}
+
 .overlay {
   position: absolute;
   inset: 0;

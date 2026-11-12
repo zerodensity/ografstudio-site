@@ -1,5 +1,6 @@
 import {useEffect, useState, type ComponentProps} from 'react';
 import type OGrafExample from './index';
+import type {Show} from './index';
 import {FEED_EVENT, type FeedNews} from './weatherNews';
 import styles from './weather.module.css';
 
@@ -47,8 +48,22 @@ const SOURCES = (
   </>
 );
 
-/** How the Europe weather sequence plays: on the live forecast, with the outlook city to choose. */
+/**
+ * Europe weather's show: the opening, the map's three days, then the outlook touring the cities, and out.
+ * A step settles within two seconds, and the tour spends about nine seconds on each city.
+ */
+const WEATHER_SHOW: Show = [
+  {after: 4000, cue: 'next'}, // Today
+  {after: 6000, cue: 'next'}, // Tomorrow
+  {after: 5000, cue: 'next'}, // The day after
+  {after: 5000, cue: 'next'}, // The outlook
+  {after: 6000, cue: {update: {tour: true}}},
+  {after: 36000, cue: 'take-out'},
+];
+
+/** How the Europe weather sequence plays: on the live forecast, with the outlook city to choose, and its show. */
 export const WEATHER: Partial<ComponentProps<typeof OGrafExample>> = {
+  show: WEATHER_SHOW,
   feed: 'weather',
   formFields: ['featured', 'tour'],
   lockedBy: {featured: 'tour'},

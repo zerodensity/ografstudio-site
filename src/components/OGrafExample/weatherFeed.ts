@@ -1,7 +1,8 @@
 // The live forecast behind the Weather examples. A graphic doesn't fetch anything itself: whoever
 // plays it sends it data, and on this page that's the code here. It asks Open-Meteo for all twelve
 // cities when the graphic loads and again every quarter of an hour, and sends the answer as one
-// update. The graphic does the rest, including the city the visitor picks.
+// update. The graphic does the rest, including the city the visitor picks. A graphic loaded again
+// within the quarter, such as for the next lap of a show, gets the forecast this page already has.
 import {fetchForecast} from '@site/src/data/weatherData.mjs';
 import {FEED_EVENT, type FeedNews} from './weatherNews';
 
@@ -14,8 +15,15 @@ const REFRESH_MS = 15 * 60_000;
 /** After a failed request the graphic keeps what it shows, and this asks again sooner. */
 const RETRY_MS = 60_000;
 
+/** The last forecast this page fetched, and when. */
+let last: {cities: unknown; at: number} | undefined;
+
 export function startWeatherFeed(player: Sender, signal: AbortSignal): void {
   let timer: number | undefined;
+  const send = async ({cities, at}: {cities: unknown; at: number}) => {
+    await player.update({cities});
+    if (!signal.aborted) tell({at});
+  };
   const run = async () => {
     if (signal.aborted) return;
     let next = REFRESH_MS;
@@ -24,10 +32,8 @@ export function startWeatherFeed(player: Sender, signal: AbortSignal): void {
       if (document.hidden) next = RETRY_MS;
       else {
         const cities = await fetchForecast(signal);
-        if (!signal.aborted) {
-          await player.update({cities});
-          tell({at: Date.now()});
-        }
+        last = {cities, at: Date.now()};
+        if (!signal.aborted) await send(last);
       }
     } catch {
       next = RETRY_MS;
@@ -36,5 +42,9 @@ export function startWeatherFeed(player: Sender, signal: AbortSignal): void {
     if (!signal.aborted) timer = window.setTimeout(run, next);
   };
   signal.addEventListener('abort', () => window.clearTimeout(timer));
-  void run();
+  const age = last ? Date.now() - last.at : Infinity;
+  if (last && age < REFRESH_MS) {
+    send(last).catch(() => undefined);
+    timer = window.setTimeout(run, REFRESH_MS - age);
+  } else void run();
 }

@@ -8,7 +8,22 @@ import type {OGrafPlayer} from './ograf-player';
 import styles from './styles.module.css';
 
 type PlayerModule = typeof import('./ograf-player');
-type FieldValue = string | number | boolean;
+export type FieldValue = string | number | boolean;
+/** What a show does to the graphic: what the player's own buttons and form do. An action works only on air. */
+export type ShowCue = 'next' | 'take-out' | {action: string} | {update: Record<string, FieldValue>};
+/** One beat of a show: it waits `after` milliseconds from the beat before, then cues the graphic. */
+export interface ShowBeat {
+  after: number;
+  cue: ShowCue;
+}
+/**
+ * A show a graphic plays by itself, lap after lap. Each lap loads the graphic afresh and takes it in, then plays
+ * the beats, and a moment after the last one the next lap starts. A graphic taken in again opens from where it
+ * was, so only a fresh one opens cleanly, and a fresh one has its starting data and score too.
+ */
+export type Show = ShowBeat[];
+/** The moment between one lap of a show and the next. */
+const SHOW_LAP_GAP_MS = 1500;
 /** `returning`: unmounted for being off screen, or on its way back, so nothing can be pressed yet. */
 type Status = 'waiting' | 'loading' | 'returning' | 'off-air' | 'on-air' | 'busy' | 'error';
 
@@ -59,6 +74,12 @@ interface Props {
   landscapeFullscreen?: boolean;
   /** Where a graphic's data comes from, under the player. */
   sources?: ReactNode;
+  /**
+   * A show the graphic plays by itself, so a visitor sees all it does without pressing anything. It takes the
+   * graphic in as it loads, in place of `autoPlay`, and goes round and round until the visitor presses a
+   * control, changes the form or presses on the picture. Autoplay starts it again.
+   */
+  show?: Show;
 }
 
 const STATUS_TEXT: Record<Status, string> = {
@@ -233,11 +254,21 @@ const CONTROL_ICONS = {
     />
   ),
   next: <path d="M2.5 3v10l7-5zM9.5 3v10l5-5z" fill="currentColor" />,
+  autoplay: (
+    <path
+      d="M2.5 7.5V6.5a2 2 0 0 1 2-2h8.5M10.5 2l2.5 2.5-2.5 2.5M13.5 8.5v1a2 2 0 0 1-2 2H3M5.5 14 3 11.5 5.5 9"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  ),
 };
 
-function ControlIcon({kind}: {kind: keyof typeof CONTROL_ICONS}): ReactNode {
+function ControlIcon({kind, className}: {kind: keyof typeof CONTROL_ICONS; className?: string}): ReactNode {
   return (
-    <svg viewBox="0 0 16 16" aria-hidden="true">
+    <svg className={className} viewBox="0 0 16 16" aria-hidden="true">
       {CONTROL_ICONS[kind]}
     </svg>
   );
@@ -270,6 +301,7 @@ function LivePlayer({
   feed,
   landscapeFullscreen = false,
   sources,
+  show,
 }: Props): ReactNode {
   const entry = graphics[slug];
   // A list written in a page is a new array on every render, so the mount follows its contents.
@@ -290,7 +322,7 @@ function LivePlayer({
   const [offscreen, setOffscreen] = useState(false);
   /** Unmounted for being off screen. */
   const [asleep, setAsleep] = useState(false);
-  /** Counts the times a graphic on a feed has started over. */
+  /** Counts the times the graphic has loaded again: on a feed, after a failed function, and for each lap of a show. */
   const [restarts, setRestarts] = useState(0);
   const lastRestart = useRef(0);
   const [visible, setVisible] = useState(false);
@@ -309,6 +341,18 @@ function LivePlayer({
   const [turned, setTurned] = useState(false);
   const [barAwake, setBarAwake] = useState(true);
   const barTimer = useRef<number | undefined>(undefined);
+  /** The mounted graphic, once it can be played. */
+  const [player, setPlayer] = useState<OGrafPlayer | null>(null);
+  /** The show plays: until the visitor takes over, and again from the top when they turn Autoplay on. */
+  const [showOn, setShowOn] = useState(Boolean(show));
+  const showOnRef = useRef(showOn);
+  showOnRef.current = showOn;
+  // The homepage switches graphics in the same player, and each one starts with its own show.
+  const [showSlug, setShowSlug] = useState(slug);
+  if (showSlug !== slug) {
+    setShowSlug(slug);
+    setShowOn(Boolean(show));
+  }
   const sourceUrl = useBaseUrl(entry.source ?? '');
   const backdrop = useBackdropStyle();
 
@@ -508,7 +552,9 @@ function LivePlayer({
           const {startWeatherFeed} = await import('./weatherFeed');
           if (!abort.signal.aborted) startWeatherFeed(mounted, abort.signal);
         }
-        if (autoPlay || wakingUp) {
+        setPlayer(mounted);
+        // A show takes the graphic in itself, with its first beats.
+        if ((autoPlay || wakingUp) && !(show && showOnRef.current)) {
           setStatus('busy');
           await mounted.play();
           if (!disposed) setStatus('on-air');
@@ -526,24 +572,133 @@ function LivePlayer({
       container.removeEventListener('ograf-function-error', restart);
       window.clearTimeout(updateTimer.current);
       playerRef.current = null;
+      setPlayer(null);
       void mounted?.dispose().catch(() => undefined);
     };
-  }, [visible, asleep, restarts, playerUrl, manifestUrl, autoPlay, slug, feed, formFieldsKey]);
+  }, [visible, asleep, restarts, playerUrl, manifestUrl, autoPlay, slug, feed, formFieldsKey, show]);
 
+  /** Plays, takes or steps the graphic. False when it failed, and the player shows why. */
   const run = useCallback(async (action: (player: OGrafPlayer) => Promise<unknown>, after: Status) => {
-    const player = playerRef.current;
-    if (!player) return;
+    const current = playerRef.current;
+    if (!current) return false;
     setStatus('busy');
     try {
-      await action(player);
+      await action(current);
       // The homepage can switch to another package while this one is still finishing.
-      if (playerRef.current === player) setStatus(after);
+      if (playerRef.current === current) setStatus(after);
+      return true;
     } catch (cause) {
-      if (playerRef.current !== player) return;
+      if (playerRef.current !== current) return false;
       setError(cause instanceof Error ? cause.message : String(cause));
       setStatus('error');
+      return false;
     }
   }, []);
+
+  const takeGraphicIn = () => {
+    setStep(0);
+    return run((p) => p.play(), 'on-air');
+  };
+  const replayGraphic = () => {
+    setStep(0);
+    return run(async (p) => {
+      await p.stop({skipAnimation: true});
+      await p.play();
+    }, 'on-air');
+  };
+  const nextGraphicStep = () => {
+    setStep((current) => current + 1);
+    return run((p) => p.next(), 'on-air');
+  };
+  const takeGraphicOut = () => run((p) => p.stop(), 'off-air');
+  /**
+   * Sends an action. An `add:<field>:<step>` one changes that field inside the graphic, so the form follows,
+   * counting from `from`: the form for a visitor, who may still be typing.
+   */
+  const sendAction = (id: string, from: Record<string, FieldValue> = sentValues.current) => {
+    const stepped = fieldStep(id);
+    if (stepped) {
+      const [key, by] = stepped;
+      const next = Number(from[key] ?? 0) + by;
+      setValues((current) => ({...current, [key]: next}));
+      sentValues.current = {...sentValues.current, [key]: next};
+    }
+    return playerRef.current?.action(id);
+  };
+
+  /** Loads the graphic afresh, quietly, as one coming back from off screen. */
+  const reloadGraphic = () => {
+    waking.current = true;
+    setRestarts((count) => count + 1);
+  };
+
+  // The show cues the graphic as a visitor would, one lap for each graphic it loads. It stops when the visitor
+  // takes over, when the graphic goes (off screen, or another one on the homepage), and when a cue fails.
+  useEffect(() => {
+    if (!show || !showOn || !player) return undefined;
+    const stop = new AbortController();
+    const gone = () => stop.signal.aborted || playerRef.current !== player;
+    const wait = (ms: number) =>
+      new Promise<void>((resolve) => {
+        const timer = window.setTimeout(resolve, ms);
+        stop.signal.addEventListener('abort', () => {
+          window.clearTimeout(timer);
+          resolve();
+        });
+      });
+    const cue = async (beat: ShowCue): Promise<boolean> => {
+      if (beat === 'next') return nextGraphicStep();
+      if (beat === 'take-out') return takeGraphicOut();
+      try {
+        if ('action' in beat) {
+          await sendAction(beat.action);
+        } else {
+          setValues((current) => ({...current, ...beat.update}));
+          sentValues.current = {...sentValues.current, ...beat.update};
+          await player.update(beat.update);
+        }
+        return true;
+      } catch (cause) {
+        if (gone()) return false;
+        setError(cause instanceof Error ? cause.message : String(cause));
+        setStatus('error');
+        return false;
+      }
+    };
+    void (async () => {
+      if (gone()) return;
+      let going = await takeGraphicIn();
+      for (const beat of show) {
+        if (!going) break;
+        await wait(beat.after);
+        going = !gone() && (await cue(beat.cue));
+      }
+      if (gone()) return;
+      // A cue failed, and the player says why.
+      if (!going) {
+        setShowOn(false);
+        return;
+      }
+      await wait(SHOW_LAP_GAP_MS);
+      if (!gone()) reloadGraphic();
+    })();
+    return () => stop.abort();
+    // The cue helpers are new each render, but they reach the player only through refs and setters.
+  }, [show, showOn, player]);
+
+  /** The visitor takes over from the show, which stops and leaves the graphic as it is. */
+  const takeOver = () => setShowOn(false);
+  const toggleShow = () => {
+    if (showOn) {
+      takeOver();
+      return;
+    }
+    // The show starts over with the graphic loaded afresh, so what the visitor changed is gone, and no longer
+    // keeps it on off screen.
+    touched.current = false;
+    setShowOn(true);
+    reloadGraphic();
+  };
 
   // Fullscreen lifts the frame out of the page, so where the figure sits says nothing then.
   const away = offscreen && !expanded;
@@ -567,6 +722,7 @@ function LivePlayer({
 
   /** `now` sends at once: only typing waits, so one update carries the whole word. */
   const change = (key: string, value: FieldValue, now = false) => {
+    takeOver();
     touched.current = true;
     const next = {...values, [key]: value};
     setValues(next);
@@ -590,17 +746,9 @@ function LivePlayer({
   };
 
   const runAction = (id: string) => {
-    const player = playerRef.current;
-    if (!player) return;
+    takeOver();
     touched.current = true;
-    const stepped = fieldStep(id);
-    if (stepped) {
-      const [key, by] = stepped;
-      const next = Number(values[key] ?? 0) + by;
-      setValues((current) => ({...current, [key]: next}));
-      sentValues.current = {...sentValues.current, [key]: next};
-    }
-    player.action(id).catch((cause: unknown) => {
+    sendAction(id, values)?.catch((cause: unknown) => {
       setError(cause instanceof Error ? cause.message : String(cause));
     });
   };
@@ -620,21 +768,21 @@ function LivePlayer({
       : `${(entry.sourceBytes / 1024 / 1024).toFixed(1)} MB`;
 
   const takeIn = () => {
-    setStep(0);
-    void run((p) => p.play(), 'on-air');
+    takeOver();
+    void takeGraphicIn();
   };
-  const takeOut = () => void run((p) => p.stop(), 'off-air');
+  const takeOut = () => {
+    takeOver();
+    void takeGraphicOut();
+  };
   const replay = () => {
-    setStep(0);
-    void run(async (p) => {
-      await p.stop({skipAnimation: true});
-      await p.play();
-    }, 'on-air');
+    takeOver();
+    void replayGraphic();
   };
   const nextStep = () => {
+    takeOver();
     touched.current = true;
-    setStep((current) => current + 1);
-    void run((p) => p.next(), 'on-air');
+    void nextGraphicStep();
   };
   const stepText = `${Math.min(step + 1, stepCount)}/${stepCount}`;
 
@@ -654,6 +802,16 @@ function LivePlayer({
 
   const actionButtons = (
     <>
+      {show && (
+        <button
+          type="button"
+          className={`button button--sm ${showOn ? 'button--primary' : 'button--secondary'}`}
+          aria-pressed={showOn}
+          title="Plays the whole graphic by itself, round and round. Pressing anything else takes over."
+          onClick={toggleShow}>
+          <ControlIcon kind="autoplay" className={styles.buttonIcon} /> Autoplay
+        </button>
+      )}
       {stepCount > 1 && (
         <button
           type="button"
@@ -690,7 +848,8 @@ function LivePlayer({
         onPointerDown={expanded ? wakeBar : undefined}
         onPointerMove={expanded ? wakeBar : undefined}>
         <BackdropCamera />
-        <div ref={viewportRef} className={styles.viewport} />
+        {/* Pressing on the picture, such as on a button a graphic has inside it, takes over from the show. */}
+        <div ref={viewportRef} className={styles.viewport} onPointerDown={showOn ? takeOver : undefined} />
         {status === 'loading' && (
           <div className={styles.overlay}>
             <p>Loading graphic…</p>
@@ -727,6 +886,11 @@ function LivePlayer({
                 onClick={nextStep}>
                 <ControlIcon kind="next" />
                 <span>{stepText}</span>
+              </button>
+            )}
+            {show && (
+              <button type="button" aria-label="Autoplay" aria-pressed={showOn} data-primary={showOn || undefined} onClick={toggleShow}>
+                <ControlIcon kind="autoplay" />
               </button>
             )}
             <button type="button" aria-label="Exit fullscreen" onClick={toggleFullscreen}>
@@ -789,7 +953,7 @@ function LivePlayer({
           )}
           <fieldset className={styles.data} disabled={status === 'error' || status === 'loading' || status === 'returning'}>
             <legend>{DATA_LEGEND}</legend>
-            {(actions.length > 0 || stepCount > 1) && (
+            {(actions.length > 0 || stepCount > 1 || show) && (
               <div className={styles.actions}>{actionButtons}</div>
             )}
             {fields.map(([key, field]) => {
