@@ -106,6 +106,11 @@ server. See [carousel/README.md](carousel/README.md) to change or rebuild it.
 - **Example:** add its package to `graphics/` (see above), an `.mdx` page to `examples/` with
   `<OGrafExample slug="…" />`, a 16:9 screenshot to `static/img/examples/` for the gallery card,
   and a card to `src/data/examples.ts`. Put other downloadable files in `static/downloads/`.
+  Then make the picture a shared link to the page shows, in Teams, Slack and the like: push the page,
+  run `npm run share-cards -- <slug>` (it takes the graphic from the live site; set
+  `SITE=http://localhost:3000` to use `npm start` instead), and add
+  `image: /img/share/<slug>.jpg?v=1` to the page's front matter. When you remake a card, raise its
+  `?v=`: chat apps keep the picture they once fetched from an address.
 
 Pages use plain Markdown (`.md`) unless they need components (`.mdx`). The build fails on broken
 links, so check with `npm run build` before pushing.

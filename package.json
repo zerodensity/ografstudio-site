@@ -18,7 +18,8 @@
     "prestart": "npm run graphics",
     "prebuild": "npm run graphics",
     "labels": "node scripts/set-example-field-labels.mjs",
-    "sync:player": "node scripts/sync-web-player.mjs"
+    "sync:player": "node scripts/sync-web-player.mjs",
+    "share-cards": "node scripts/share-cards.mjs"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.2",
