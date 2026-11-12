@@ -103,10 +103,11 @@ function editableFields(schema: unknown): Array<[string, FieldSchema]> {
 
 /**
  * The buttons a package offers. A clock's timer commands are always published but do nothing on a
- * running time-of-day clock, so its form leaves them out.
+ * running time-of-day clock, so its form leaves them out. Race telemetry's two timers are run by
+ * its own rules, in step with its timeline, and pausing one by hand would only put the text out of step.
  */
 function operatorActions(slug: string, all: OperatorAction[] | undefined): OperatorAction[] {
-  if (slug === 'clock' || !all) return [];
+  if (slug === 'clock' || slug === 'race-telemetry' || !all) return [];
   const actions = slug === 'live-markets' ? all.filter((action) => !action.name.startsWith('Local clock: ')) : all;
   const prefix = actions[0]?.name.split(': ')[0];
   const shared = actions.length > 0 && actions.every((action) => action.name.startsWith(`${prefix}: `));

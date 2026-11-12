@@ -1,0 +1,96 @@
+---
+title: Race telemetry
+sidebar_position: 7.8
+description: The last lap of the 2020 Italian Grand Prix, redrawn from public telemetry. Sixteen cars on the map, a timing tower, and two cars 0.4 seconds apart at the flag.
+unlisted: true
+---
+
+import ExampleOrigin from '@site/src/components/ExampleOrigin';
+import ExampleTags from '@site/src/components/ExampleTags';
+import OGrafExample from '@site/src/components/OGrafExample';
+import {RACE_TELEMETRY} from '@site/src/components/OGrafExample/raceTelemetry';
+
+<ExampleTags slug="race-telemetry" />
+
+<OGrafExample slug="race-telemetry" {...RACE_TELEMETRY} />
+
+<ExampleOrigin slug="race-telemetry" />
+
+Monza, 6 September 2020. Pierre Gasly starts the last lap of the Italian Grand Prix nine tenths of a
+second ahead of Carlos Sainz, who has DRS, the tow, and one lap to use them. This graphic plays that
+lap as it happened, in real time.
+
+**There is no footage in it.** Every car's position, speed, gear, throttle, brake and DRS come from
+the race's public telemetry, about nine samples a second for each of the sixteen cars still running.
+The graphic redraws the lap from those numbers: where each car is on the circuit, what the two
+leaders' instruments read, and how far apart they are.
+
+This is an unofficial replay for showing what OGraf Studio can do. It isn't affiliated with
+Formula 1, the FIA or any team, and it uses none of their logos or pictures.
+
+## Try it
+
+The player runs the lap by itself as the page opens, and starts it again a few seconds after the
+result. Press any button or the picture and it stops going round, and the controls are yours.
+**Autoplay** starts it again from the top.
+
+1. Watch the gap. Sainz opens his DRS on the main straight and reaches 348 km/h against Gasly's 321,
+   and is a third of a second behind into the first chicane.
+2. Untick **Captions** while it plays. The box over the map goes, and nothing else is disturbed.
+3. Type a new **Title**. It changes in place.
+4. Press **Take out** at any moment. Everything leaves together, mid-lap or not. **Take in** plays
+   the lap from the start.
+
+## What you see
+
+- **The track map:** the circuit's line is coloured by the leader's speed, from blue in the chicanes
+  to red on the straights. Each car is a dot in its team's colour. The dotted green lines are where
+  Sainz had DRS.
+- **The timing tower:** every car's gap to the leader. As on a timing screen, a gap changes when its
+  car crosses a timing line. Two cars are passed on this lap, and their rows change places.
+- **The fight for the win:** each leader's speed, gear, revs, throttle and brake, and the gap between
+  them, which is measured from their positions and agrees with the official timing at every timing
+  line.
+- **The speed trace:** both cars' speed through the lap, drawn as it happens. The dips are the
+  corners.
+- **The finish:** the flag, the winner by 0.415 seconds, and the first six with the official times.
+
+## What you get
+
+- **Clips for everything that moves:** each moving layer has one clip as long as the lap, which
+  starts when the graphic is on air and holds its last frame. Car positions, rev rings, pedals, the
+  charts being drawn and the captions are keys on those clips, about 11,500 of them, placed by a
+  script from the telemetry.
+- **Rolling numbers:** the speeds, the gears and the gap are strips of digits. Each strip moves
+  behind a window that shows one digit, so the numbers change with the picture, frame for frame.
+- **A timer with alarms:** a hidden timer starts with the clips. Rules on it set the text that
+  changes now and then, 96 times in the lap: the tower's gaps, the sector times, the captions.
+- **A lap clock:** the leader's lap time is a timer layer. The alarm at the line sends it back to
+  zero, and it stops at the flag on 1:25.783.
+- **Rev rings from a gradient:** each ring is one ellipse with a conic gradient. The clip moves two
+  of its stops.
+- **Pictures for what never changes:** the panels, the circuit and the fixed labels are one picture,
+  drawn once with the template's own fonts. A graphic works on every layer on every frame, so the
+  fewer layers, the more smoothly it plays.
+- **Stop at any time:** the lap isn't a step. A step has to finish before the graphic can be taken
+  out, and this one would take 103 seconds.
+- **Data updates:** the title and the captions change in place, mid-lap.
+- **No function:** nothing in it needs one, so there is nothing to wait for and nothing to fail.
+
+## Where the data comes from
+
+| What | From |
+| --- | --- |
+| Positions, speed, gear, revs, throttle, brake and DRS of every car, and the times at each timing line | [TracingInsights](https://tracinginsights.com/), from their [2020 season files](https://github.com/TracingInsights/2020), under the MIT licence |
+| Finishing times and grid places | Their [RaceData](https://github.com/TracingInsights/RaceData) tables, CC0 |
+
+The telemetry ends when a car takes the flag. After that the car coasts on round the circuit so the
+map doesn't freeze, and its gauges hold what they read at the line.
+
+## Make it yours
+
+The scripts in the site's
+[`examples-src`](https://github.com/zerodensity/ografstudio-site/tree/main/examples-src) folder
+build it, and its README says how. To replay another race, change the race in
+`race-telemetry-snapshot.mjs` and the two cars in `race-telemetry-story.mjs`, draw the pictures
+again and rebuild.

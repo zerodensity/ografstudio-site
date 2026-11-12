@@ -86,3 +86,8 @@ its checksums before replacing files.
 - The feature reel uses an excerpt of Big Buck Bunny, © 2008 Blender Foundation,
   [peach.blender.org](https://peach.blender.org/), cut and re-encoded, under
   [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
+- The Race telemetry example replays timing and telemetry from
+  [TracingInsights](https://tracinginsights.com/), © 2023 TracingInsights-Archive, under the
+  [MIT licence](pathname:///third-party/tracinginsights-LICENSE.txt), with the official result from
+  their RaceData tables (CC0). It is an unofficial replay and is not affiliated with Formula 1, the
+  FIA or any team.

@@ -5,7 +5,7 @@ saves the editable source here (`<slug>.ogs`) and exports the certified package 
 `graphics/<slug>.ograf.zip`:
 
 clock, countdown, scoreboard, lower-third, ticker, bug, rankings, live-markets, weather, weather-strap,
-shader-background and lottie-pulse.
+race-telemetry, shader-background and lottie-pulse.
 
 `npm run graphics` copies each `.ogs` to `static/graphics`, and the player's caption links to it. The
 prompt, model and generation time on each page live in `origin` in `src/data/examples.ts`. The time
@@ -74,6 +74,74 @@ forecast to the graphic. A few things to know before changing them:
 - Text has a fixed size. Shrink-to-fit measures every label on every frame that something moves, which
   stalled a city change. Oswald's sizes are the ones shrink-to-fit used to settle on.
 - Studio stores every key of every layer, so `weather.ogs` is about 6 MB. The package is about 2.7 MB.
+
+Race telemetry replays the last lap of the 2020 Italian Grand Prix from public telemetry. It has no
+feed and no function: the data is built in, as clips and rules. Three steps rebuild it:
+
+```bash
+node examples-src/race-telemetry-snapshot.mjs
+```
+
+```bash
+node examples-src/race-telemetry-pictures.mjs
+```
+
+```bash
+node examples-src/build.mjs race-telemetry
+```
+
+- `race-telemetry-snapshot.mjs` downloads the last two laps of every car still running from one fixed
+  commit of [TracingInsights/2020](https://github.com/TracingInsights/2020) (MIT) and the official
+  result from [TracingInsights/RaceData](https://github.com/TracingInsights/RaceData) (CC0), and saves
+  what the example needs in `race-telemetry-snapshot.json`. `race-telemetry-data.mjs` reads it.
+- `race-telemetry-story.mjs` works out what happened: the gap between the two leaders, the running
+  order, the tower, the captions, and every piece of text that changes with the moment it does.
+- `race-telemetry-art.mjs` holds the layout and draws everything that never changes as pages:
+  the backdrop with the circuit and every fixed label, the charts, the car markers, the strips of
+  digits, the winner's card and the result. `race-telemetry-pictures.mjs` saves them as WebP in
+  `race-telemetry-pictures`, with a headless Chrome.
+- `race-telemetry.mjs` places the layers, gives the moving ones their clips and writes the rules.
+
+A few things to know before changing it:
+
+- The runtime works on every layer on every frame, moving or not. The first version had 126 layers
+  and used 40% of a processor core; with the fixed parts as pictures it has 73 and uses 27%. A
+  drawn picture is also only copied when a car passes over it, where a vector one is drawn again.
+  So add to the backdrop before you add a layer.
+- The runtime also looks through every key of every track on each frame. A number that changes ten
+  times a second costs about 2,000 keys a lap, so the gap changes five times a second.
+- The lap is clips, not a step, because Stop waits for a running step and this one would last 103
+  seconds. The clips start when the graphic is on air (`lifecycle`) and play once. A clip started by
+  a custom action would go back to its layer's resting pose at the end, and an operator's custom
+  action also holds every other command up until its clip has finished.
+- There is no function. One wrote the numbers ten times a second at first. Each call needs a new
+  worker, and on a busy machine one now and then failed to start in time. A function that fails
+  once stays failed, so the numbers froze while the cars drove on, in most laps of one test. Now
+  the fast numbers are strips of digits on clips, and the rest is set by rules.
+- A rolling number is a window (`clipChildren`) with a strip for each digit inside it: a blank, then
+  0 to 9. The clip moves the strip so one cell shows. Cells touch, so a digit seen mid-change is two
+  half digits and not a blank.
+- The rules hang on a hidden timer, the race clock, which a `play` rule restarts when the graphic has
+  arrived on air: the same moment the clips start. Each of its alarms sets the fields that change
+  then. A `stop` rule, delayed until the graphic has gone, puts every field and both timers back,
+  so a second Play opens at the first moment again.
+- The lap clock is a timer too. Its starting value is bound to `clock_from`, and the alarm at the
+  line sets that to zero, which sends a running timer back to zero.
+- A cover has to be solid whenever what it hides can be seen, or the hidden part shows through the
+  fades. The charts' covers and the rev rings' centres come up first and go down last (`COVERS` and
+  `COVERED` in `race-telemetry.mjs`).
+- A clip can't move a wipe (`clipRight` and the others), so the charts are drawn by sliding a cover
+  off them, and their guides are a picture laid over the cover.
+- The gap is measured from the two cars' positions and nudged to the official gap at each timing
+  line. The tower shows only official gaps, which change as each car crosses a line.
+- The telemetry ends at the flag. After it a car coasts on round the outline, which is made up, and
+  its gauges hold what they read at the line.
+- A percent sign in an SVG data URI breaks the export with "URI malformed" unless it is escaped,
+  and a repeated attribute makes the picture invalid, which Studio waits on until capture times out.
+- `RACE_FROM=80 node examples-src/build.mjs race-telemetry` starts the replay 80 seconds into the lap,
+  to look at a moment without waiting for it. Don't ship that build.
+- To replay another race, change `SOURCE` and `LAPS` in the snapshot script and the two cars in the
+  story, then check the map's rotation and the corner names in the art.
 
 ## Fonts
 

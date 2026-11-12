@@ -159,6 +159,16 @@
     "fields": 4,
     "actions": 0
   },
+  "race-telemetry": {
+    "name": "Race telemetry",
+    "manifest": "/graphics/race-telemetry/project-75616c96-23b3-4edf-b39c-4e4c02a8b523-rt.ograf.json",
+    "download": "/graphics/race-telemetry.ograf.zip",
+    "bytes": 1435972,
+    "source": "/graphics/race-telemetry.ogs",
+    "sourceBytes": 4446360,
+    "fields": 2,
+    "actions": 0
+  },
   "rankings": {
     "name": "Rankings",
     "manifest": "/graphics/rankings/project-3a144ed4-945e-47de-8aaf-8a418ee4602c-rt.ograf.json",

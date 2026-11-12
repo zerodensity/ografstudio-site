@@ -11,6 +11,7 @@ import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import { call } from '../carousel/mcp.mjs';
 import { liveMarkets } from './live-markets.mjs';
+import { raceTelemetry } from './race-telemetry.mjs';
 import { weather, weatherStrap } from './weather.mjs';
 
 const FONT = 'Roboto Condensed, Arial Narrow, Arial, sans-serif';
@@ -55,9 +56,10 @@ async function apply(operations, reason) {
   return result;
 }
 
-async function fresh() {
+/** Studio 0.33 keeps the request a template was made from, and won't start one without it. */
+async function fresh(request) {
   const start = await settled();
-  await call('ograf_reset_project', { expectedRevision: start.revision, confirm: true });
+  await call('ograf_reset_project', { expectedRevision: start.revision, confirm: true, originalPrompt: request });
 }
 
 /** The main composition, plus lookups by layer name and field key. */
@@ -1405,8 +1407,10 @@ const EXAMPLES = {
 EXAMPLES['live-markets'] = () => liveMarkets({ apply, scene, addField, bind, rule, option });
 EXAMPLES.weather = () => weather({ apply, scene, addField, bind, option });
 EXAMPLES['weather-strap'] = () => weatherStrap({ apply, scene, addField, bind, option });
+EXAMPLES['race-telemetry'] = () => raceTelemetry({ apply, scene, addField, bind });
 
 const NAMES = {
+  'race-telemetry': 'Race telemetry',
   'live-markets': 'Live markets',
   weather: 'Europe weather',
   'weather-strap': 'Weather strap',
@@ -1424,10 +1428,16 @@ const NAMES = {
 /** These hold no clock or rule, so they seek to the same frame and suit non-real-time playout too. */
 const DUAL_MODE = new Set(['shader-background', 'lottie-pulse']);
 
+/** The request each template was made from, as its page gives it in src/data/examples.ts. The rest are rebuilt from this script. */
+const REQUESTS = {
+  'race-telemetry':
+    'I want to build the most striking example for ografstudio.org, with a Formula 1 theme. TracingInsights has the telemetry of past races: maybe we can build an example of one or two minutes on a real, clean finish, with all the timings, graphics and telemetry visuals.',
+};
+
 const wanted = process.argv.slice(2);
 for (const slug of wanted.length ? wanted : Object.keys(EXAMPLES)) {
   console.log(`--- ${slug}`);
-  await fresh();
+  await fresh(REQUESTS[slug] ?? `Rebuild the ${NAMES[slug]} example of ografstudio.org from examples-src/build.mjs.`);
   if (ROBOTO_EXAMPLES.has(slug)) await apply([robotoFont()], 'Add the font');
   await EXAMPLES[slug]();
   // Live clocks, timers and rules: these are made for real-time playout.

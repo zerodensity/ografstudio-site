@@ -179,6 +179,24 @@ export const examples: Example[] = [
     },
   },
   {
+    slug: 'race-telemetry',
+    title: 'Race telemetry',
+    summary: 'The last lap of a real Grand Prix, redrawn from public telemetry: every car on the map, a timing tower and two cars fighting for the win.',
+    image: '/img/examples/race-telemetry.png',
+    level: 'Advanced',
+    tags: ['Real data', 'Rules', 'Timer', 'Animation'],
+    // By its link only, until it is announced.
+    unlisted: true,
+    notOnHomepage: true,
+    origin: {
+      model: 'Claude Fable 5.2',
+      generationTime: 'About 2 hours',
+      prompts: [
+        'I want to build the most striking example for ografstudio.org, with a Formula 1 theme. TracingInsights has the telemetry of past races: maybe we can build an example of one or two minutes on a real, clean finish, with all the timings, graphics and telemetry visuals.',
+      ],
+    },
+  },
+  {
     slug: 'charts',
     title: 'Chart set',
     summary: "Nine chart templates sharing four team values, with bars that grow in order and circular charts that sweep from 12 o'clock.",

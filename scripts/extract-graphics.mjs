@@ -65,7 +65,8 @@ for (const zipName of zips) {
     fields: Object.values(manifest.schema?.properties ?? {}).filter((field) =>
       ['string', 'number', 'integer', 'boolean'].includes(field.type),
     ).length,
-    actions: slug === 'clock' ? 0 : (manifest.customActions?.length ?? 0) + (Number(manifest.stepCount ?? 1) > 1 ? 1 : 0),
+    // The same packages whose timer commands OGrafExample's operatorActions leaves out.
+    actions: ['clock', 'race-telemetry'].includes(slug) ? 0 : (manifest.customActions?.length ?? 0) + (Number(manifest.stepCount ?? 1) > 1 ? 1 : 0),
   };
 }
 
