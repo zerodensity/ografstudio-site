@@ -7,6 +7,7 @@ import {LevelTag} from '@site/src/components/ExampleTags';
 import HeroReel from '@site/src/components/HeroReel';
 import OGrafExample from '@site/src/components/OGrafExample';
 import {LIVE_MARKETS} from '@site/src/components/OGrafExample/liveMarkets';
+import {RACE_TELEMETRY} from '@site/src/components/OGrafExample/raceTelemetry';
 import {RANKINGS} from '@site/src/components/OGrafExample/rankings';
 import {WEATHER, WEATHER_STRAP} from '@site/src/components/OGrafExample/weather';
 import {examples} from '@site/src/data/examples';
@@ -167,6 +168,7 @@ const controls = examples.filter((item) => !item.notOnHomepage && !item.unlisted
 /** What an example needs from its player beyond its name. */
 const PLAYER_PROPS: Record<string, Partial<ComponentProps<typeof OGrafExample>>> = {
   'live-markets': LIVE_MARKETS,
+  'race-telemetry': RACE_TELEMETRY,
   rankings: RANKINGS,
   weather: WEATHER,
   'weather-strap': WEATHER_STRAP,
