@@ -22,6 +22,13 @@ const config: Config = {
   title: 'OGraf Studio',
   tagline: 'Create animated, data-driven broadcast graphics visually or with AI.',
   favicon: 'img/favicon.svg',
+  // Search engines and phones look for the icon in more forms than the SVG above: Google wants a square
+  // image a multiple of 48 px, and many crawlers try /favicon.ico (in static/).
+  headTags: [
+    {tagName: 'link', attributes: {rel: 'icon', type: 'image/png', sizes: '48x48', href: '/img/favicon-48.png'}},
+    {tagName: 'link', attributes: {rel: 'icon', type: 'image/png', sizes: '192x192', href: '/img/favicon-192.png'}},
+    {tagName: 'link', attributes: {rel: 'apple-touch-icon', sizes: '180x180', href: '/img/apple-touch-icon.png'}},
+  ],
 
   future: {
     v4: true,
