@@ -3,6 +3,7 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import type * as Blog from '@docusaurus/plugin-content-blog';
 import type * as Docs from '@docusaurus/plugin-content-docs';
+import {DOWNLOADS, RELEASES_URL} from './src/data/downloads';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -182,11 +183,16 @@ const config: Config = {
         },
         {to: '/releases', label: "What's new", position: 'left'},
         {to: '/announcements', label: 'Announcements', position: 'left'},
+        // Each file straight from the newest release, and the release page for checksums and notes.
         {
-          href: `${repository}/releases/latest`,
+          type: 'dropdown',
           label: 'Download',
           position: 'right',
           className: 'navbar-download',
+          items: [
+            ...DOWNLOADS.map(({label, url}) => ({label, href: url})),
+            {label: 'All files and checksums', href: RELEASES_URL},
+          ],
         },
         {
           href: repository,

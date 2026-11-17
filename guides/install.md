@@ -12,14 +12,14 @@ connection for AI agents. You can run that server from one downloaded file, or b
 
 This is the quickest way to start. No Node.js, npm or Bun installation is needed.
 
-1. Open the [latest release](https://github.com/zerodensity/ograf-studio/releases/latest) and
-   download the file for your computer:
+1. Download the file for your computer. Each link is the file from the
+   [latest release](https://github.com/zerodensity/ograf-studio/releases/latest):
 
-   | Computer    | File                            |
-   | ----------- | ------------------------------- |
-   | Windows x64 | `OGrafStudioServer.exe`         |
-   | Linux x64   | `OGrafStudioServer-linux-x64`   |
-   | Linux ARM64 | `OGrafStudioServer-linux-arm64` |
+   | Computer    | File                                                                                                                          |
+   | ----------- | ----------------------------------------------------------------------------------------------------------------------------- |
+   | Windows x64 | [`OGrafStudioServer.exe`](https://github.com/zerodensity/ograf-studio/releases/latest/download/OGrafStudioServer.exe)                 |
+   | Linux x64   | [`OGrafStudioServer-linux-x64`](https://github.com/zerodensity/ograf-studio/releases/latest/download/OGrafStudioServer-linux-x64)     |
+   | Linux ARM64 | [`OGrafStudioServer-linux-arm64`](https://github.com/zerodensity/ograf-studio/releases/latest/download/OGrafStudioServer-linux-arm64) |
 
 2. On Linux, make the file executable first:
 
@@ -40,8 +40,16 @@ OGrafStudioServer.exe --port 4400 --workspace "D:\OGraf Projects"
 OGrafStudioServer.exe --help
 ```
 
-The server only accepts connections from your own computer (`127.0.0.1`). Projects that AI agents
-save go to `Documents\OGraf Studio\Projects` unless you choose another folder with `--workspace`.
+The editor and the connection for AI agents only accept connections from your own computer
+(`127.0.0.1`). Projects that AI agents save go to `Documents\OGraf Studio\Projects` unless you choose
+another folder with `--workspace`.
+
+From 0.34 the server also offers a viewer for Studio's Live preview to other computers on your local
+network, and prints its address and a QR code when it starts. Anyone who can reach that address can
+watch the preview and fetch its playback files, so use it on a network you trust, or start the server
+with `--no-playout` to turn the viewer off.
+[View Studio's Live preview on the LAN](/docs/development#view-studios-live-preview-on-the-lan)
+has the details.
 
 ## Run from source
 

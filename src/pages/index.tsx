@@ -12,10 +12,10 @@ import {RANKINGS} from '@site/src/components/OGrafExample/rankings';
 import {WEATHER, WEATHER_STRAP} from '@site/src/components/OGrafExample/weather';
 import {examples} from '@site/src/data/examples';
 import graphics from '@site/src/data/graphics.json';
+import {LINUX_ARM64, LINUX_X64, WINDOWS_X64} from '@site/src/data/downloads';
 import info from '@site/src/data/importInfo.json';
 import styles from './index.module.css';
 
-const DOWNLOAD_URL = 'https://github.com/zerodensity/ograf-studio/releases/latest';
 const REPOSITORY_URL = 'https://github.com/zerodensity/ograf-studio';
 
 const FEATURES = [
@@ -78,6 +78,42 @@ const STEPS = [
   },
 ];
 
+/**
+ * Studio's download for Windows as the button, with the version (linked to its notes) and the Linux files in a
+ * line under it. Each download link is the file itself, from the newest release.
+ */
+function Downloads({children}: {children: ReactNode}): ReactNode {
+  const version = info.latestRelease;
+  return (
+    <div className={styles.downloads}>
+      <div className={styles.actions}>
+        <Link className={styles.buttonPrimary} href={WINDOWS_X64.url} title={WINDOWS_X64.file}>
+          Download for Windows
+        </Link>
+        {children}
+      </div>
+      <p className={styles.otherDownloads}>
+        {version && (
+          <>
+            <Link to={`/releases/${version}`} title={`What's new in ${version}`}>
+              Version {version}
+            </Link>{' '}
+            ·{' '}
+          </>
+        )}
+        Also for{' '}
+        <Link href={LINUX_X64.url} title={LINUX_X64.file}>
+          Linux x64
+        </Link>{' '}
+        and{' '}
+        <Link href={LINUX_ARM64.url} title={LINUX_ARM64.file}>
+          Linux ARM64
+        </Link>
+      </p>
+    </div>
+  );
+}
+
 function Hero(): ReactNode {
   return (
     <header className={styles.hero}>
@@ -94,14 +130,11 @@ function Hero(): ReactNode {
               Animated, data-driven lower thirds, scoreboards, tickers and full-screen graphics,
               built visually or with AI and exported as portable OGraf packages.
             </p>
-            <div className={styles.actions}>
-              <Link className={styles.buttonPrimary} href={DOWNLOAD_URL}>
-                Download{info.latestRelease ? ` ${info.latestRelease}` : ''}
-              </Link>
+            <Downloads>
               <Link className={styles.buttonGhost} to="/guides/install">
                 Get started
               </Link>
-            </div>
+            </Downloads>
           </div>
         </div>
         <HeroReel />
@@ -329,14 +362,11 @@ function CallToAction(): ReactNode {
           Make your first graphic in minutes
         </Heading>
         <p>Download one file, run it, and open Studio in your browser.</p>
-        <div className={styles.actions}>
-          <Link className={styles.buttonPrimary} href={DOWNLOAD_URL}>
-            Download
-          </Link>
+        <Downloads>
           <Link className={styles.buttonGhost} href={REPOSITORY_URL}>
             View on GitHub
           </Link>
-        </div>
+        </Downloads>
       </div>
     </section>
   );

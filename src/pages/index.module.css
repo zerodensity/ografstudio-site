@@ -121,6 +121,25 @@
   gap: 0.6rem;
 }
 
+/* The Linux files and the release notes, under the download button. */
+.downloads p.otherDownloads {
+  margin: 0.55rem 0 0;
+  color: var(--home-muted);
+  font-size: 0.85rem;
+}
+
+.downloads p.otherDownloads a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  text-underline-offset: 0.18em;
+}
+
+.downloads p.otherDownloads a:hover {
+  color: var(--home-strong);
+  text-decoration-color: currentColor;
+}
+
 .buttonPrimary,
 .buttonGhost {
   display: inline-flex;
