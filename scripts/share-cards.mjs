@@ -30,15 +30,14 @@ const MARGIN = { width: 1104, height: 550 };
  * What to do before the picture: a string presses the player's button with that text, a number waits that
  * many milliseconds. Pressing a button stops an example's show, so the picture stays put. `focus` keeps a
  * part of the graphic, as fractions of it, for one too long and thin to read whole. `mode: 'middle'` keeps a
- * wide graphic inside the part of the card Teams shows. `opens` is the status an example rests in once it
- * has loaded, for one that waits for a press instead of coming on air by itself.
+ * wide graphic inside the part of the card Teams shows.
  */
 const SCENES = {
   weather: { steps: ['Next step', 3500] },
   rankings: { steps: ['Next vote', 11500, 'Next vote', 2600] },
   'live-markets': { steps: [6000] },
   'race-telemetry': { steps: [12000] },
-  'dino-run': { opens: 'Off air', steps: ['Take in', 6600] },
+  'dino-run': { steps: ['Replay', 6600] },
   ticker: { steps: [4000], focus: { x: 0, y: 0, width: 0.42, height: 1 } },
   'weather-strap': { mode: 'middle' },
 };
@@ -130,11 +129,10 @@ async function takeGraphic(tab, slug) {
   await tab.send('Emulation.setFocusEmulationEnabled', { enabled: true });
   await tab.send('Page.navigate', { url: `${SITE}/examples/${slug}` });
   const status = () => tab.evaluate(`document.querySelector('figure [role=status]')?.textContent ?? ''`);
-  const opens = SCENES[slug]?.opens ?? 'On air';
   for (let i = 0; i < 120; i++) {
     await sleep(250);
-    if ((await status()) === opens) break;
-    if (i === 119) throw new Error(`${slug} never came to "${opens}" (${await status()})`);
+    if ((await status()) === 'On air') break;
+    if (i === 119) throw new Error(`${slug} never came on air (${await status()})`);
   }
   for (const step of SCENES[slug]?.steps ?? DEFAULT_STEPS) {
     if (typeof step === 'number') {
