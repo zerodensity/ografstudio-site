@@ -20,25 +20,31 @@ In **Preview & Export**:
 
 ## 2. Export
 
-Choose **File → Export…**, which opens the Export section of **Preview & Export**. Set **Export
-format** to **OGraf ZIP** and choose **Export OGraf ZIP**. Pick the thumbnail frame, or **First OGraf
-step**, then export. Studio checks the package before writing it: the manifest, the package layout,
-the module and its lifecycle in both realtime and non-realtime playback. If a check fails, nothing
-is written and Studio tells you why.
+Choose **File → Export OGraf…**. The **Export OGraf…** button in **Preview & Export** opens the same
+window. Set **Export format** to **OGraf ZIP**. The thumbnail is on the left: pick its frame, or
+**First OGraf step**. Then choose **Save files…** and pick a folder, or **Download instead**. Studio
+checks the package before writing it: the manifest, the package layout, the module and its lifecycle
+in both realtime and non-realtime playback. If a check fails, nothing is written and Studio tells
+you why.
 
-**Export profile** sets the playback modes the package offers. A template with a live data
+**Playout mode** sets the playback modes the package offers. A template with a live data
 connection starts on **Real-time playout**; choose **Dual-mode package** or **Non-real-time render**
-for frame-by-frame rendering.
+for frame-by-frame rendering. For an editing app such as DaVinci Resolve, tick **NLE Export (for
+DaVinci Resolve etc.)**: the package then plays in non-real-time mode over a transparent background.
 
 The ZIP includes a transparent thumbnail referenced from the manifest, and licence files for bundled
 third-party code and assets. For a preview anyone can open in a browser, set **Export format** to
-the standalone page, or to **Both files** for the ZIP and the page side by side. **Both files** is
-the default; change it in **File → Preferences → OGraf Studio → Export**.
+the standalone page, or to **Both files** for the ZIP and the page side by side in one folder.
+**Both files** is the default; change it in **File → Preferences → OGraf Studio → Export**.
 
 To export a whole template set, set **Export scope** to **Template set**. A set that uses
 [Transitions](/docs/user-guide/transitions/overview) becomes one coordinated `.ograf.zip`. Any other set
 becomes an `.ograf-set.zip` with a checked package for each template. Studio shows its progress while
-it prepares and checks the files; choose **Cancel** or press **Esc** to stop.
+it prepares and checks the files; choose **Cancel** to stop.
+
+For a movie instead of a package, **File → Export Video…** renders the template as a WebM video,
+transparent if you want, or as numbered PNG frames.
+[Export video and PNG sequences](/docs/user-guide/preview-and-export/export-video) has the settings.
 
 ## 3. Test in your player
 

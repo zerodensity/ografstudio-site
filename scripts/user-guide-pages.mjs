@@ -17,12 +17,12 @@ export const CUTS = [
   {at: 'For a set without Transition Logic, choose **Template set**', name: 'Export a whole set'},
 
   {at: '**File → Save** writes to the current', name: 'Save a template'},
-  {at: '**File → Export…** opens Preview & Export, expands', name: 'Open the export options'},
-  {at: '**Export .ograf.zip** opens a thumbnail', name: 'Choose the thumbnail'},
-  {at: 'When you export a template set from **File → Export…**', name: 'Prepare and save'},
+  {at: '**File → Export OGraf…** opens the dialog', name: 'Open the export options'},
+  {at: 'For a single template, the thumbnail appears on the left', name: 'Choose the thumbnail'},
+  {at: 'Choose **Save files…** and pick a destination folder', name: 'Prepare and save'},
   {at: 'For **Current template**, Studio starts with', name: 'Real-time or non-real-time'},
   // Matches the line after SITE_WORDING in the import script has reworded it.
-  {at: 'In **File → Export…**, set **Export format** to the standalone page', name: 'The exported preview page'},
+  {at: 'In **File → Export OGraf…**, set **Export format** to the standalone page', name: 'The exported preview page'},
   {at: 'OGraf exports include the Studio playback', name: 'Licences in exports'},
   {at: 'The preview runs executable graphic code', name: 'Trust and browser permissions'},
 
@@ -32,7 +32,7 @@ export const CUTS = [
   {at: 'Use **Data → Nodos inputs** to select which operator fields', name: 'Fields and pin types'},
   {at: 'While Studio is connected to Nodos', name: 'Nodos types'},
   {at: 'An exposed data field or live-media tag cannot', name: 'Requirements and limits'},
-  {at: 'For DaVinci Resolve, choose', name: 'DaVinci Resolve'},
+  {at: 'Select **NLE Export (for DaVinci Resolve etc.)**', name: 'DaVinci Resolve and other editing apps'},
 
   {at: 'Use **Animation** in the chart', name: 'Chart animation'},
   {at: 'For plugin motion on individual bars', name: 'Bars and slices animation'},
@@ -445,9 +445,15 @@ export const GROUPS = [
           'Real-time or non-real-time',
           'Export a whole set',
           'Prepare and save',
+          'DaVinci Resolve and other editing apps',
           'Licences in exports',
-          'DaVinci Resolve',
         ],
+      },
+      {
+        slug: 'export-video',
+        title: 'Export video and PNG sequences',
+        label: 'Export video',
+        chunks: ['Export video and PNG sequences'],
       },
       {
         slug: 'exported-preview-page',

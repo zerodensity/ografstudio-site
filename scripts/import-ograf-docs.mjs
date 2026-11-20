@@ -42,6 +42,7 @@ const KNOWN_DOCS = {
   'docs/ANIMATION_PLUGINS.md': {slug: 'animation-plugins', label: 'Animation plugins', position: 6},
   'docs/RENDERER_PLUGINS.md': {slug: 'renderer-plugins', label: 'Renderer plugins', position: 7},
   'docs/DEVELOPMENT.md': {slug: 'development', label: 'Development', position: 8},
+  'docs/EXAMPLE_CATALOG.md': {slug: 'example-catalog', label: 'Example catalog', position: 9},
   'docs/THIRD_PARTY.md': {slug: 'third-party', label: 'Third-party credits', position: 20},
 };
 // Credits for what only this website uses, added under the repository's own list.
@@ -69,6 +70,9 @@ const SITE_WORDING = [
   [/\bStandalone HTML displays\b/g, 'The standalone page displays'],
   [/\bStandalone HTML starts\b/g, 'The standalone preview page starts'],
   [/\bsaves the HTML and ZIP separately\b/g, 'saves the page and the ZIP separately'],
+  [/\bZIP and HTML use that one folder\b/g, 'The ZIP and the standalone page use that one folder'],
+  [/\bZIP, standalone HTML, Nodos\b/g, 'ZIP, standalone page, Nodos'],
+  [/\ba ZIP package, standalone HTML, or both\b/g, 'a ZIP package, a standalone page, or both'],
   [/\bexport that member as HTML\b/g, 'export that member as a standalone page'],
   [/\bOpen the HTML file\b/g, 'Open the standalone page'],
   [/\bself-contained HTML exports\b/g, 'standalone preview pages'],
