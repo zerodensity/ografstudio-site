@@ -119,6 +119,16 @@
     "fields": 5,
     "actions": 4
   },
+  "dino-run": {
+    "name": "Dino Run",
+    "manifest": "/graphics/dino-run/dino-run-rt.ograf.json",
+    "download": "/graphics/dino-run.ograf.zip",
+    "bytes": 1045486,
+    "source": "/graphics/dino-run.ogs",
+    "sourceBytes": 3902231,
+    "fields": 5,
+    "actions": 0
+  },
   "feature-reel": {
     "name": "OGraf Studio Feature Reel",
     "manifest": "/graphics/feature-reel/set-c5e29362-1082-4a99-add8-dc6c4fd0a333-rt.ograf.json",

@@ -7,6 +7,8 @@ saves the editable source here (`<slug>.ogs`) and exports the certified package 
 clock, countdown, scoreboard, lower-third, ticker, bug, rankings, live-markets, weather, weather-strap,
 race-telemetry, shader-background and lottie-pulse.
 
+Dino Run has its own script, in `dino-run/`: see its part below.
+
 `npm run graphics` copies each `.ogs` to `static/graphics`, and the player's caption links to it. The
 prompt, model and generation time on each page live in `origin` in `src/data/examples.ts`. The time
 is estimated from the session records and counts writing and building only. When you rebuild a
@@ -142,6 +144,34 @@ A few things to know before changing it:
   to look at a moment without waiting for it. Don't ship that build.
 - To replay another race, change `SOURCE` and `LAPS` in the snapshot script and the two cars in the
   story, then check the map's rotation and the corner names in the art.
+
+Dino Run is a 15-second cartoon, not a broadcast graphic: a pixel-art runner with sound, built to show
+how far a timeline goes. Its scripts are in `dino-run/` and stand apart from `build.mjs`:
+
+```bash
+node examples-src/dino-run/build.mjs
+```
+
+That builds the template in the Studio whose MCP server `OGRAF_MCP_URL` names, replacing whatever
+template is open there. Then save it from Studio as `examples-src/dino-run.ogs` and export the
+package as `graphics/dino-run.ograf.zip`, for real-time playout.
+
+- `art.mjs` holds the pixel art as grids of characters and `png.mjs` turns them into pictures.
+  `node examples-src/dino-run/art.mjs sheet` saves them all on one sheet to look at.
+- `sound.mjs` makes the 23 sound effects from arithmetic. Run by itself it writes them as `.wav`
+  files to listen to.
+- `build.mjs` has the timing, the places and sizes, the settings and the frame of every sound.
+  `studio.mjs` and `mcp.mjs` talk to Studio.
+
+A few things to know before changing it:
+
+- Playback draws the moments between frames, so a picture that jumps in one frame shows as a streak.
+  Poses change by opacity inside a single frame, the new one coming up as the old one goes.
+- A value map does not resolve `asset:` references, so the night and day pictures a setting chooses
+  between are stored in the map itself.
+- The editor shows a layer's saved visibility, not what a rule makes of it. The city layers start
+  hidden and a rule shows them, so the editor shows the desert.
+- Sound makes a template real-time only, and there is no setting that switches a sound cue off.
 
 ## Fonts
 

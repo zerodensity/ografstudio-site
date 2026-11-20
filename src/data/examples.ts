@@ -194,6 +194,26 @@ export const examples: Example[] = [
     },
   },
   {
+    slug: 'dino-run',
+    title: 'Dino Run',
+    summary: 'A 15-second pixel-art cartoon with sound: a dinosaur runs, jumps, eats and grows, until the camera pulls back on a surprise.',
+    image: '/img/examples/dino-run.png',
+    level: 'Advanced',
+    tags: ['Animation', 'Sound', 'Value maps', 'Rules'],
+    unlisted: true,
+    origin: {
+      model: 'Claude Fable 5.2',
+      generationTime: 'About 1 hour 30 minutes',
+      prompts: [
+        'Build a 15-second animation with no interaction, in the spirit of an endless runner: an orange dinosaur runs to the right, dodging and jumping obstacles, eats another dinosaur to get bigger, and in the end hits a wall. The wall is a huge "OGraf" text, seen when the camera zooms out. Then the animation stops.',
+        'Make the eaten dinosaur blue and very old, walking slowly with a cane and wearing a cowboy hat. Put a V on the orange dinosaur and a C on the old one, and give the orange dinosaur a tall Viking helmet.',
+        "Add a pterodactyl with an X, flying in the background. I want settings for day or night, for the landscape (the desert or a city) and for the dinosaurs' colours, and sound effects for the jumps, the hits, the eating and so on.",
+        'The pterodactyl should be red by default. It should hit the O too, and its beak should stick there while it flaps its wings. Make it bigger, so the X is readable, and give it a trapper hat.',
+        "When the camera zooms out, add a meteor coming into view: the end of the dinosaurs' era is getting near.",
+      ],
+    },
+  },
+  {
     slug: 'charts',
     title: 'Chart set',
     summary: "Nine chart templates sharing four team values, with bars that grow in order and circular charts that sweep from 12 o'clock.",

@@ -1,0 +1,90 @@
+---
+title: Dino Run
+sidebar_position: 7.76
+description: A 15-second pixel-art cartoon made in OGraf Studio, with sound. A dinosaur in a Viking helmet runs, jumps, eats and grows, until the camera pulls back on a surprise.
+image: /img/share/dino-run.jpg?v=1
+unlisted: true
+---
+
+import ExampleOrigin from '@site/src/components/ExampleOrigin';
+import ExampleTags from '@site/src/components/ExampleTags';
+import OGrafExample from '@site/src/components/OGrafExample';
+
+<ExampleTags slug="dino-run" />
+
+Press **Take in** to start it. The cartoon has sound, so it waits for you.
+
+<OGrafExample slug="dino-run" autoPlay={false} playsOnce landscapeFullscreen />
+
+<ExampleOrigin slug="dino-run" />
+
+A cartoon, not a broadcast graphic: fifteen seconds in the spirit of an endless runner, built to
+show how far a timeline can go. An orange dinosaur in a Viking helmet runs to the right, jumps a
+rock and ducks under a dragonfly. It catches an old blue dinosaur walking on a cane, eats it and
+grows. Then it runs into a wall. The camera pulls back, and the wall turns out to be the first
+letter of a very large word.
+
+There is no video in it and no script that runs while it plays. Every move is a key on Studio's
+timeline. All the pictures are original pixel art drawn for this example, and all the sounds were
+made for it.
+
+## Try it
+
+A browser keeps a page silent until you press something on it, so the cartoon doesn't start by
+itself.
+
+1. Press **Take in**. The whole cartoon plays, with its 23 sound effects, and holds its last
+   picture. **Replay** and **Take out** work once it has stopped.
+2. Change **Time of day** to Day and press **Replay**. The sky, the light on the land and the
+   colour of the big word are different from the first frame on.
+3. Change **Landscape** to City and press **Replay**. The desert gives way to a skyline and a road.
+4. Pick new colours for the three animals. Their shading and their costumes stay as they are.
+5. Press **Fullscreen**. The picture is 1920 × 1080 at 50 frames a second.
+
+A setting changed while the cartoon plays takes effect when it has stopped.
+
+## What you see
+
+- **The run:** the Viking dinosaur, with a V on its side, jumps a rock and ducks under a dragonfly.
+- **The meal:** an old blue dinosaur, with a C on its side, walks slowly on a cane in a cowboy hat.
+  It is eaten, and only the hat is left behind. The Viking dinosaur grows.
+- **The wall:** bigger now, it smashes through a rock, jumps the lava and runs into a wall. Stars
+  go round its head.
+- **The pull-back:** the camera pulls back until the whole word is in the picture. A pterodactyl in
+  a trapper hat, with an X on its wing, has flown along all the while. It reaches the wall a moment
+  earlier, and its beak is stuck in the letter.
+- **The meteor:** as the camera pulls back, a meteor comes into the sky. It is still on its way when
+  everything stops.
+
+## What you get
+
+- **One long Take in:** the whole cartoon is the way in, 750 frames of it. The graphic then holds
+  its last frame, and **Take out** fades it away. A graphic comes in from wherever its timeline
+  stands, so this one plays once each time it loads, and the player on this page loads it again for
+  every **Replay**.
+- **Sprites by opacity:** each pose of an animal is its own layer, and all of an animal's poses
+  share the same position keys. A pose changes by one layer's opacity going to nothing while the
+  next one's comes up, inside a single frame.
+- **A world that scrolls:** rocks, lava and the old dinosaur ride on position keys. The hills,
+  buildings, pebbles and road marks are strips that repeat.
+- **A camera made of keys:** there is no camera in Studio. The pull-back is a position key and a size
+  key on everything that stands in the world, all with the same easing. The big word is one vector
+  shape, drawn seven times larger in the close view.
+- **Colours you can change:** each pose is a vector shape under a picture. The shape takes the
+  colour field, and the picture on top holds the outline, the shading and the costume.
+- **Value maps:** **Time of day** picks a night or a day picture for each strip, and the colours of
+  the sky and the word, through value maps on those layers.
+- **Rules:** the desert and the city are separate layers. A rule on each shows or hides it by the
+  **Landscape** field.
+- **Sound cues:** 23 sound effects sit on the timeline as sound cues, each at its frame: the jumps
+  and landings, the bite, the growing, the hit on the wall, the meteor's rumble and a short tune at
+  the end. Sound makes this a real-time graphic only.
+
+## Make it yours
+
+Download the `.ogs` file above and open it in Studio with **File → Open**. The pixel art, the
+sounds and the timing come from the scripts in the site's
+[`examples-src/dino-run`](https://github.com/zerodensity/ografstudio-site/tree/main/examples-src/dino-run)
+folder: the animals are grids of characters in `art.mjs`, the sounds are a few lines of arithmetic
+each in `sound.mjs`, and `build.mjs` places every layer and key. The README in `examples-src` says
+how to rebuild it.
