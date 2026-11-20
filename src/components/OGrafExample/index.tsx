@@ -53,14 +53,11 @@ interface Props {
   slug: keyof typeof graphics;
   /** Accessible description of the graphic. */
   label?: string;
-  /** Take the graphic in as soon as it has loaded. Defaults to true. */
-  autoPlay?: boolean;
   /**
-   * The graphic tells its whole story as it comes in, so it plays once for each time it loads: taken in
-   * again, it would jump to its last picture and play all its sounds together. Replay, and Take in after
-   * the first, load it afresh instead, with the form as it stands.
+   * Take the graphic in as soon as it has loaded. Defaults to true. With false it waits for the visitor,
+   * also when it comes back from off screen: one with sound, which a browser blocks until a press.
    */
-  playsOnce?: boolean;
+  autoPlay?: boolean;
   /** Show the operator data form. Defaults to true. */
   showData?: boolean;
   /** Keep room for a form with this many fields, for pages that switch `slug` in place. */
@@ -300,7 +297,6 @@ function LivePlayer({
   slug,
   label,
   autoPlay = true,
-  playsOnce = false,
   showData = true,
   reserveFields = 0,
   reserveActions = 0,
@@ -327,10 +323,6 @@ function LivePlayer({
   const touched = useRef(false);
   /** The next mount brings back a graphic that was on air before it went to sleep. */
   const waking = useRef(false);
-  /** Whether this load of the graphic has been taken in, for one that plays once. */
-  const taken = useRef(false);
-  /** The form a graphic that plays once starts its next load with, when the visitor asked to see it again. */
-  const freshTake = useRef<Record<string, FieldValue> | null>(null);
   const [offscreen, setOffscreen] = useState(false);
   /** Unmounted for being off screen. */
   const [asleep, setAsleep] = useState(false);
@@ -518,11 +510,6 @@ function LivePlayer({
     let mounted: OGrafPlayer | null = null;
     const wakingUp = waking.current;
     waking.current = false;
-    const fresh = freshTake.current;
-    freshTake.current = null;
-    taken.current = false;
-    // One that plays once and waits for the visitor waits again when it comes back from off screen.
-    const comesBack = wakingUp && (autoPlay || !playsOnce);
     touched.current = false;
     setStatus(wakingUp ? 'returning' : 'loading');
     // A failed function stays failed, and the graphic just stops changing with nothing to show for it. On
@@ -554,14 +541,14 @@ function LivePlayer({
           ([key]) => !formFieldsKey || formFieldsKey.split(',').includes(key),
         );
         const defaults = (module.dataFromSchemaDefaults(mounted.manifest.schema) ?? {}) as Record<string, FieldValue>;
-        const start = fresh ?? defaults;
-        sentValues.current = start;
+        sentValues.current = defaults;
         setFields(editable);
-        setValues(start);
+        setValues(defaults);
         setActions(operatorActions(slug, mounted.manifest.customActions));
         setStepCount(Number(mounted.manifest.stepCount ?? 1));
         setStep(0);
-        if (!comesBack) setStatus('off-air');
+        // One that waits for the visitor waits again when it comes back from off screen.
+        if (!wakingUp || !autoPlay) setStatus('off-air');
         if (feed === 'markets') {
           const {startMarketFeed} = await import('./marketFeed');
           // It ends with the mount, so a graphic parked off screen stops listening too.
@@ -572,13 +559,8 @@ function LivePlayer({
         }
         setPlayer(mounted);
         // A show takes the graphic in itself, with its first beats.
-        if (fresh) {
-          const changed = Object.entries(fresh).filter(([key, value]) => value !== defaults[key]);
-          if (changed.length > 0) await mounted.update(Object.fromEntries(changed), {skipAnimation: true});
-        }
-        if ((autoPlay || comesBack || fresh) && !(show && showOnRef.current)) {
+        if (autoPlay && !(show && showOnRef.current)) {
           setStatus('busy');
-          taken.current = true;
           await mounted.play();
           if (!disposed) setStatus('on-air');
         }
@@ -598,7 +580,7 @@ function LivePlayer({
       setPlayer(null);
       void mounted?.dispose().catch(() => undefined);
     };
-  }, [visible, asleep, restarts, playerUrl, manifestUrl, autoPlay, playsOnce, slug, feed, formFieldsKey, show]);
+  }, [visible, asleep, restarts, playerUrl, manifestUrl, autoPlay, slug, feed, formFieldsKey, show]);
 
   /** Plays, takes or steps the graphic. False when it failed, and the player shows why. */
   const run = useCallback(async (action: (player: OGrafPlayer) => Promise<unknown>, after: Status) => {
@@ -790,23 +772,9 @@ function LivePlayer({
       ? `${Math.max(1, Math.round(entry.sourceBytes / 1024))} KB`
       : `${(entry.sourceBytes / 1024 / 1024).toFixed(1)} MB`;
 
-  /** Loads a graphic that plays once afresh and takes it in, with the form as it stands. */
-  const takeAfresh = () => {
-    freshTake.current = values;
-    setRestarts((count) => count + 1);
-  };
-  /** The first Take in of a load. Any later one, of a graphic that plays once, needs a new load. */
-  const takeInOrAfresh = () => {
-    if (playsOnce && taken.current) {
-      takeAfresh();
-      return;
-    }
-    taken.current = true;
-    void takeGraphicIn();
-  };
   const takeIn = () => {
     takeOver();
-    takeInOrAfresh();
+    void takeGraphicIn();
   };
   const takeOut = () => {
     takeOver();
@@ -814,8 +782,7 @@ function LivePlayer({
   };
   const replay = () => {
     takeOver();
-    if (playsOnce) takeInOrAfresh();
-    else void replayGraphic();
+    void replayGraphic();
   };
   const nextStep = () => {
     takeOver();

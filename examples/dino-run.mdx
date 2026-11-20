@@ -14,7 +14,7 @@ import OGrafExample from '@site/src/components/OGrafExample';
 
 Press **Take in** to start it. The cartoon has sound, so it waits for you.
 
-<OGrafExample slug="dino-run" autoPlay={false} playsOnce landscapeFullscreen />
+<OGrafExample slug="dino-run" autoPlay={false} landscapeFullscreen />
 
 <ExampleOrigin slug="dino-run" />
 
@@ -34,14 +34,14 @@ A browser keeps a page silent until you press something on it, so the cartoon do
 itself.
 
 1. Press **Take in**. The whole cartoon plays, with its 23 sound effects, and holds its last
-   picture. **Replay** and **Take out** work once it has stopped.
-2. Change **Time of day** to Day and press **Replay**. The sky, the light on the land and the
-   colour of the big word are different from the first frame on.
-3. Change **Landscape** to City and press **Replay**. The desert gives way to a skyline and a road.
+   picture.
+2. Press **Replay**, and change **Time of day** to Day while it plays. The sky, the light on the
+   land and the colour of the big word change in place, and the cartoon plays on.
+3. Change **Landscape** to City. The desert gives way to a skyline and a road.
 4. Pick new colours for the three animals. Their shading and their costumes stay as they are.
 5. Press **Fullscreen**. The picture is 1920 × 1080 at 50 frames a second.
 
-A setting changed while the cartoon plays takes effect when it has stopped.
+**Replay** and **Take out** wait until the cartoon has stopped.
 
 ## What you see
 
@@ -59,9 +59,7 @@ A setting changed while the cartoon plays takes effect when it has stopped.
 ## What you get
 
 - **One long Take in:** the whole cartoon is the way in, 750 frames of it. The graphic then holds
-  its last frame, and **Take out** fades it away. A graphic comes in from wherever its timeline
-  stands, so this one plays once each time it loads, and the player on this page loads it again for
-  every **Replay**.
+  its last frame, and **Take out** fades it away. Taken in again, it plays from the first frame.
 - **Sprites by opacity:** each pose of an animal is its own layer, and all of an animal's poses
   share the same position keys. A pose changes by one layer's opacity going to nothing while the
   next one's comes up, inside a single frame.

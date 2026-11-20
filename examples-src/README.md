@@ -172,6 +172,11 @@ A few things to know before changing it:
 - The editor shows a layer's saved visibility, not what a rule makes of it. The city layers start
   hidden and a rule shows them, so the editor shows the desert.
 - Sound makes a template real-time only, and there is no setting that switches a sound cue off.
+- The package on the site is exported from a Studio with two runtime fixes that were still in review
+  when it was made: [taking a graphic in again](https://github.com/zerodensity/ograf-studio/pull/113)
+  and [data updates during a Take in](https://github.com/zerodensity/ograf-studio/pull/114). Exported
+  from a Studio without them, a second Take in jumps to the last picture with every sound at once,
+  and a setting changed while the cartoon plays shows only when it has stopped.
 
 ## Fonts
 
