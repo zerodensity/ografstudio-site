@@ -15,7 +15,7 @@ import OGrafExample from '@site/src/components/OGrafExample';
 The cartoon starts by itself. It has sound, which a browser keeps off until you press something on
 the page: press **Replay** to hear it from the start.
 
-<OGrafExample slug="dino-run" landscapeFullscreen />
+<OGrafExample slug="dino-run" poster="/img/examples/dino-run-first.webp" landscapeFullscreen />
 
 <ExampleOrigin slug="dino-run" />
 
@@ -60,8 +60,9 @@ on the page.
 
 ## What you get
 
-- **One long Take in:** the whole cartoon is the way in, 750 frames of it. The graphic then holds
-  its last frame, and **Take out** fades it away. Taken in again, it plays from the first frame.
+- **One long Take in:** the whole cartoon is the way in, 750 frames of it, and its first frame
+  already holds the whole scene. The graphic then holds its last frame, and **Take out** fades it
+  away. Taken in again, it plays from the first frame.
 - **Sprites by opacity:** each pose of an animal is its own layer, and all of an animal's poses
   share the same position keys. A pose changes by one layer's opacity going to nothing while the
   next one's comes up, inside a single frame.

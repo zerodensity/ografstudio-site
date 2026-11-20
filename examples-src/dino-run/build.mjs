@@ -81,8 +81,11 @@ function tidy(list) {
   });
 }
 
-/** Fades a layer in at the start, out after the end, or both. Multiplies nothing: use on layers that are simply there. */
-const fadeIn = (record) => keys(record, 'opacity', [[0, 0], [10, 1]]);
+/**
+ * A layer that is simply there: in the picture from the first frame, so the cartoon never opens on an
+ * empty one, and faded out after the end. Multiplies nothing.
+ */
+const fromStart = (record) => keys(record, 'opacity', [[0, 1]]);
 const fadeOut = (record) => keys(record, 'opacity', [[END, 1], [LAST, 0]]);
 
 /** The pull-back, for a layer that is part of the world: its place and size at Z0 are scaled to the wide view. */
@@ -174,7 +177,7 @@ keys(clouds, 'x', [[0, 0], ...BREAKS.slice(1, 5).map((frame) => [frame, -0.04 * 
 const moonSources = timed({ night: art.MOON, day: art.SUN });
 const moon = timedLayer('Moon and sun', moonSources, [1500, 96, moonSources.width, moonSources.height]);
 for (const record of [sky, stars, clouds, moon]) {
-  fadeIn(record);
+  fromStart(record);
   fadeOut(record);
 }
 
@@ -222,7 +225,7 @@ function plane(name, grids, factor, top, options = {}) {
       return (((raw % (2 * TILE_W)) + 2 * TILE_W) % (2 * TILE_W)) - TILE_W - MARGIN;
     };
     const x = [[0, place(0)]];
-    const opacity = [[0, 0], [10, 1]];
+    const opacity = [[0, 1]];
     for (let frame = 0; frame < HIT; frame++) {
       const here = place(frame);
       const there = place(frame + 1);
@@ -314,8 +317,7 @@ const flyer = [art.PTERO_A, art.PTERO_B].map((pose, index) => {
   const turn = [[STUCK, 0]];
   for (let frame = STUCK + 2, beat = 0; frame <= END; frame += PANIC, beat++) turn.push([frame, beat % 2 ? 5 : -8, 'sine-in-out']);
   flyer.forEach((parts, index) => {
-    const opacity = [[0, 0]];
-    if (index === 0) opacity.push([10, 1]);
+    const opacity = [[0, index === 0 ? 1 : 0]];
     let on = index === 0;
     for (let frame = 12 + FLAP, beat = 1; frame < END - 4; frame += frame >= STUCK ? PANIC : FLAP, beat++) {
       on = beat % 2 === index;
@@ -409,7 +411,7 @@ const JUMP_LAVA = 460; // and jumps the lava
 const KICK_X = 560;
 const lava = prop('Lava', lavaPicture, worldFor(JUMP_LAVA, FOOT2, lavaPicture.width), GY);
 const rock1 = prop('Rock 1', rockPicture, worldFor(JUMP_ROCK, FOOT1, rockPicture.width), onGround(rockPicture));
-keys(rock1, 'opacity', [[0, 0], [10, 1]]); // it is in view from the start
+fromStart(rock1); // it is in view from the start
 const rock2 = prop('Rock 2', rockPicture, worldFor(SMASH[0], KICK_X, rockPicture.width), onGround(rockPicture));
 keys(rock2, 'opacity', [[SMASH[0], 1], [SMASH[0] + 1, 0]]);
 
@@ -560,7 +562,7 @@ for (const [key, parts] of Object.entries(dino)) for (const record of parts) {
   const opacity = [[0, 0]];
   show.forEach(([frame, shown], index) => {
     const before = index > 0 ? show[index - 1][1] : null;
-    if (shown === key && before !== key) opacity.push(...(frame === 0 ? [[10, 1]] : [[frame, 0], [frame + 1, 1, 'expo-in-out']]));
+    if (shown === key && before !== key) opacity.push(...(frame === 0 ? [[0, 1]] : [[frame, 0], [frame + 1, 1, 'expo-in-out']]));
     if (before === key && shown !== key) opacity.push([frame, 1], [frame + 1, 0, 'expo-in']);
   });
   if (show.at(-1)[1] === key) opacity.push([END, 1], [LAST, 0]);
@@ -673,7 +675,7 @@ keys(sign, 'opacity', [[0, 0], [4, 0], [5, 1], [12, 1], [13, 0], [16, 0], [17, 1
 // ---------------------------------------------------------------- the pull-back for the rest
 for (const record of [ground, road]) {
   pullBack(record);
-  fadeIn(record);
+  fromStart(record);
   fadeOut(record);
 }
 for (const record of [...mesas, ...dunes, ...cityFar, ...cityNear]) {

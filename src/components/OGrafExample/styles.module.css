@@ -18,6 +18,15 @@
   inset: 0;
 }
 
+/* A picture of the graphic's first frame, under the stage until the graphic is on it. */
+.poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 /*
  * Fullscreen: the stage keeps 16:9 and the backdrop fills whatever the screen leaves over. iPhones can't
  * put an element in fullscreen, so there the frame fills the window instead (`data-filling`), and the

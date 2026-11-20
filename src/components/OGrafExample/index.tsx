@@ -75,6 +75,11 @@ interface Props {
   feed?: 'markets' | 'weather';
   /** In fullscreen on a phone, show the graphic in landscape however the phone is held. */
   landscapeFullscreen?: boolean;
+  /**
+   * A picture of the graphic as it stands when it has loaded, for one that is in the picture before its
+   * Take in. The frame shows it until the graphic is there, so the page never opens on an empty frame.
+   */
+  poster?: string;
   /** Where a graphic's data comes from, under the player. */
   sources?: ReactNode;
   /**
@@ -304,6 +309,7 @@ function LivePlayer({
   lockedBy,
   feed,
   landscapeFullscreen = false,
+  poster,
   sources,
   show,
 }: Props): ReactNode {
@@ -313,6 +319,7 @@ function LivePlayer({
   const playerUrl = useBaseUrl('/player/ograf-player.js');
   const manifestUrl = useBaseUrl(entry.manifest);
   const downloadUrl = useBaseUrl(entry.download);
+  const posterUrl = useBaseUrl(poster);
   const frameRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<OGrafPlayer | null>(null);
@@ -766,6 +773,7 @@ function LivePlayer({
   );
   const lastStep = step >= stepCount - 1;
   const ready = status === 'on-air' || status === 'off-air';
+  const posterShown = poster && (status === 'waiting' || status === 'loading' || status === 'returning');
   const sizeMb = (entry.bytes / 1024 / 1024).toFixed(1);
   const sourceSize =
     entry.sourceBytes < 1024 * 1024
@@ -854,6 +862,7 @@ function LivePlayer({
         onPointerMove={expanded ? wakeBar : undefined}>
         <BackdropCamera />
         {/* Pressing on the picture, such as on a button a graphic has inside it, takes over from the show. */}
+        {posterShown && <img className={styles.poster} src={posterUrl} alt="" />}
         <div ref={viewportRef} className={styles.viewport} onPointerDown={showOn ? takeOver : undefined} />
         {status === 'loading' && (
           <div className={styles.overlay}>
@@ -1010,7 +1019,13 @@ function LivePlayer({
 
 /** A live, interactive OGraf graphic from graphics/, played with the OGraf web player. */
 export default function OGrafExample(props: Props): ReactNode {
-  return (
-    <BrowserOnly fallback={<div className={styles.frame} />}>{() => <LivePlayer {...props} />}</BrowserOnly>
+  const posterUrl = useBaseUrl(props.poster);
+  // The page as it is served has only this frame, until its scripts run. A poster is in it from there,
+  // and the browser asks for it as it reads the page, ahead of the styles and scripts.
+  const served = (
+    <div className={styles.frame}>
+      {props.poster && <img className={styles.poster} src={posterUrl} alt="" fetchPriority="high" />}
+    </div>
   );
+  return <BrowserOnly fallback={served}>{() => <LivePlayer {...props} />}</BrowserOnly>;
 }

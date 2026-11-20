@@ -123,9 +123,9 @@
     "name": "Dino Run",
     "manifest": "/graphics/dino-run/dino-run-rt.ograf.json",
     "download": "/graphics/dino-run.ograf.zip",
-    "bytes": 981356,
+    "bytes": 981441,
     "source": "/graphics/dino-run.ogs",
-    "sourceBytes": 3902231,
+    "sourceBytes": 3897516,
     "fields": 5,
     "actions": 0
   },
