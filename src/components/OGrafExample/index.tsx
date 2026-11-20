@@ -24,8 +24,11 @@ export interface ShowBeat {
 export type Show = ShowBeat[];
 /** The moment between one lap of a show and the next. */
 const SHOW_LAP_GAP_MS = 1500;
-/** `returning`: unmounted for being off screen, or on its way back, so nothing can be pressed yet. */
-type Status = 'waiting' | 'loading' | 'returning' | 'off-air' | 'on-air' | 'busy' | 'error';
+/**
+ * `returning`: unmounted for being off screen, or on its way back, so nothing can be pressed yet.
+ * `coming-in`: animating in, or to its next step. A Take out or a Replay cuts that short.
+ */
+type Status = 'waiting' | 'loading' | 'returning' | 'off-air' | 'on-air' | 'coming-in' | 'busy' | 'error';
 
 interface FieldSchema {
   type?: string;
@@ -96,6 +99,7 @@ const STATUS_TEXT: Record<Status, string> = {
   returning: 'Playing…',
   'off-air': 'Off air',
   'on-air': 'On air',
+  'coming-in': 'Playing…',
   busy: 'Playing…',
   error: 'Unavailable',
 };
@@ -323,6 +327,8 @@ function LivePlayer({
   const frameRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<OGrafPlayer | null>(null);
+  /** Counts the presses that play, take or step the graphic: only the newest says where it stands. */
+  const runs = useRef(0);
   const updateTimer = useRef<number | undefined>(undefined);
   const sentValues = useRef<Record<string, FieldValue>>({});
   const figureRef = useRef<HTMLElement>(null);
@@ -566,11 +572,7 @@ function LivePlayer({
         }
         setPlayer(mounted);
         // A show takes the graphic in itself, with its first beats.
-        if (autoPlay && !(show && showOnRef.current)) {
-          setStatus('busy');
-          await mounted.play();
-          if (!disposed) setStatus('on-air');
-        }
+        if (autoPlay && !(show && showOnRef.current)) await run((p) => p.play(), 'on-air', 'coming-in');
       } catch (cause) {
         if (disposed) return;
         setError(cause instanceof Error ? cause.message : String(cause));
@@ -589,38 +591,50 @@ function LivePlayer({
     };
   }, [visible, asleep, restarts, playerUrl, manifestUrl, autoPlay, slug, feed, formFieldsKey, show]);
 
-  /** Plays, takes or steps the graphic. False when it failed, and the player shows why. */
-  const run = useCallback(async (action: (player: OGrafPlayer) => Promise<unknown>, after: Status) => {
-    const current = playerRef.current;
-    if (!current) return false;
-    setStatus('busy');
-    try {
-      await action(current);
-      // The homepage can switch to another package while this one is still finishing.
-      if (playerRef.current === current) setStatus(after);
-      return true;
-    } catch (cause) {
-      if (playerRef.current !== current) return false;
-      setError(cause instanceof Error ? cause.message : String(cause));
-      setStatus('error');
-      return false;
-    }
-  }, []);
+  /**
+   * Plays, takes or steps the graphic, which shows as `during` meanwhile. False when it failed, and the
+   * player shows why.
+   */
+  const run = useCallback(
+    async (action: (player: OGrafPlayer) => Promise<unknown>, after: Status, during: Status = 'busy') => {
+      const current = playerRef.current;
+      if (!current) return false;
+      const turn = ++runs.current;
+      setStatus(during);
+      try {
+        await action(current);
+        // The homepage can switch to another package while this one is still finishing. And a Take out
+        // or a Replay cuts a Take in short, which then answers too: the newest press sets the status.
+        if (playerRef.current === current && runs.current === turn) setStatus(after);
+        return true;
+      } catch (cause) {
+        if (playerRef.current !== current) return false;
+        setError(cause instanceof Error ? cause.message : String(cause));
+        setStatus('error');
+        return false;
+      }
+    },
+    [],
+  );
 
   const takeGraphicIn = () => {
     setStep(0);
-    return run((p) => p.play(), 'on-air');
+    return run((p) => p.play(), 'on-air', 'coming-in');
   };
   const replayGraphic = () => {
     setStep(0);
-    return run(async (p) => {
-      await p.stop({skipAnimation: true});
-      await p.play();
-    }, 'on-air');
+    return run(
+      async (p) => {
+        await p.stop({skipAnimation: true});
+        await p.play();
+      },
+      'on-air',
+      'coming-in',
+    );
   };
   const nextGraphicStep = () => {
     setStep((current) => current + 1);
-    return run((p) => p.next(), 'on-air');
+    return run((p) => p.next(), 'on-air', 'coming-in');
   };
   const takeGraphicOut = () => run((p) => p.stop(), 'off-air');
   /**
@@ -773,6 +787,8 @@ function LivePlayer({
   );
   const lastStep = step >= stepCount - 1;
   const ready = status === 'on-air' || status === 'off-air';
+  /** A graphic that is still coming in can be taken out or played again: either cuts the way in short. */
+  const comingIn = status === 'coming-in';
   const posterShown = poster && (status === 'waiting' || status === 'loading' || status === 'returning');
   const sizeMb = (entry.bytes / 1024 / 1024).toFixed(1);
   const sourceSize =
@@ -804,10 +820,10 @@ function LivePlayer({
       <button type="button" className="button button--primary button--sm" disabled={status !== 'off-air'} onClick={takeIn}>
         ▶ Take in
       </button>
-      <button type="button" className="button button--secondary button--sm" disabled={status !== 'on-air'} onClick={takeOut}>
+      <button type="button" className="button button--secondary button--sm" disabled={status !== 'on-air' && !comingIn} onClick={takeOut}>
         ■ Take out
       </button>
-      <button type="button" className="button button--secondary button--sm" disabled={!ready} onClick={replay}>
+      <button type="button" className="button button--secondary button--sm" disabled={!ready && !comingIn} onClick={replay}>
         ↻ Replay
       </button>
     </>
@@ -885,10 +901,10 @@ function LivePlayer({
             <button type="button" aria-label="Take in" data-primary disabled={status !== 'off-air'} onClick={takeIn}>
               <ControlIcon kind="takeIn" />
             </button>
-            <button type="button" aria-label="Take out" disabled={status !== 'on-air'} onClick={takeOut}>
+            <button type="button" aria-label="Take out" disabled={status !== 'on-air' && !comingIn} onClick={takeOut}>
               <ControlIcon kind="takeOut" />
             </button>
-            <button type="button" aria-label="Replay" disabled={!ready} onClick={replay}>
+            <button type="button" aria-label="Replay" disabled={!ready && !comingIn} onClick={replay}>
               <ControlIcon kind="replay" />
             </button>
             {stepCount > 1 && (
@@ -987,7 +1003,7 @@ function LivePlayer({
                 </div>
               );
             })}
-            {fields.length === 0 && actions.length === 0 && stepCount === 1 && (status === 'on-air' || status === 'off-air' || status === 'busy' || status === 'returning') && (
+            {fields.length === 0 && actions.length === 0 && stepCount === 1 && (status === 'on-air' || status === 'off-air' || status === 'coming-in' || status === 'busy' || status === 'returning') && (
               <p className={styles.noData}>
                 This graphic has no operator data. Use Take in and Take out to control it.
               </p>
