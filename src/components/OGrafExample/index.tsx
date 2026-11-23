@@ -21,7 +21,15 @@ export interface ShowBeat {
  * the beats, and a moment after the last one the next lap starts. A graphic taken in again opens from where it
  * was, so only a fresh one opens cleanly, and a fresh one has its starting data and score too.
  */
-export type Show = ShowBeat[];
+export interface Show {
+  /**
+   * The step each lap takes the graphic in to, counted from 0: the first when left out. A later one is cut
+   * to, because the animation in would play what comes before it, such as an opening title. So the lap opens
+   * on what a visitor came to see.
+   */
+  opensOn?: number;
+  beats: ShowBeat[];
+}
 /** The moment between one lap of a show and the next. */
 const SHOW_LAP_GAP_MS = 1500;
 /**
@@ -560,16 +568,18 @@ function LivePlayer({
         setActions(operatorActions(slug, mounted.manifest.customActions));
         setStepCount(Number(mounted.manifest.stepCount ?? 1));
         setStep(0);
-        // One that waits for the visitor waits again when it comes back from off screen.
-        if (!wakingUp || !autoPlay) setStatus('off-air');
         if (feed === 'markets') {
           const {startMarketFeed} = await import('./marketFeed');
           // It ends with the mount, so a graphic parked off screen stops listening too.
           if (!abort.signal.aborted) startMarketFeed(mounted, abort.signal);
         } else if (feed === 'weather') {
           const {startWeatherFeed} = await import('./weatherFeed');
-          if (!abort.signal.aborted) startWeatherFeed(mounted, abort.signal);
+          // The graphic comes on with the forecast in it, not with the one it was built with for a moment.
+          if (!abort.signal.aborted) await startWeatherFeed(mounted, abort.signal);
+          if (disposed) return;
         }
+        // One that waits for the visitor waits again when it comes back from off screen.
+        if (!wakingUp || !autoPlay) setStatus('off-air');
         setPlayer(mounted);
         // A show takes the graphic in itself, with its first beats.
         if (autoPlay && !(show && showOnRef.current)) await run((p) => p.play(), 'on-air', 'coming-in');
@@ -617,9 +627,10 @@ function LivePlayer({
     [],
   );
 
-  const takeGraphicIn = () => {
-    setStep(0);
-    return run((p) => p.play(), 'on-air', 'coming-in');
+  /** Takes the graphic in: to its first step, or cut straight to a later one, as a show that opens there does. */
+  const takeGraphicIn = (step = 0) => {
+    setStep(step);
+    return run((p) => p.play(step === 0 ? undefined : {goto: step, skipAnimation: true}), 'on-air', 'coming-in');
   };
   const replayGraphic = () => {
     setStep(0);
@@ -693,8 +704,8 @@ function LivePlayer({
     };
     void (async () => {
       if (gone()) return;
-      let going = await takeGraphicIn();
-      for (const beat of show) {
+      let going = await takeGraphicIn(show.opensOn);
+      for (const beat of show.beats) {
         if (!going) break;
         await wait(beat.after);
         going = !gone() && (await cue(beat.cue));

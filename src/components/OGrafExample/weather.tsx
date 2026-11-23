@@ -49,17 +49,20 @@ const SOURCES = (
 );
 
 /**
- * Europe weather's show: the opening, the map's three days, then the outlook touring the cities, and out.
- * A step settles within two seconds, and the tour spends about nine seconds on each city.
+ * Europe weather's show: the map's three days, then the outlook touring the cities, and out. Each lap opens
+ * on Today, its second step, so the first thing a visitor sees is today's weather and not the title over an
+ * empty map. A step settles within two seconds, and the tour spends about nine seconds on each city.
  */
-const WEATHER_SHOW: Show = [
-  {after: 4000, cue: 'next'}, // Today
-  {after: 6000, cue: 'next'}, // Tomorrow
-  {after: 5000, cue: 'next'}, // The day after
-  {after: 5000, cue: 'next'}, // The outlook
-  {after: 6000, cue: {update: {tour: true}}},
-  {after: 36000, cue: 'take-out'},
-];
+const WEATHER_SHOW: Show = {
+  opensOn: 1, // Today
+  beats: [
+    {after: 6000, cue: 'next'}, // Tomorrow
+    {after: 5000, cue: 'next'}, // The day after
+    {after: 5000, cue: 'next'}, // The outlook
+    {after: 6000, cue: {update: {tour: true}}},
+    {after: 36000, cue: 'take-out'},
+  ],
+};
 
 /** How the Europe weather sequence plays: on the live forecast, with the outlook city to choose, and its show. */
 export const WEATHER: Partial<ComponentProps<typeof OGrafExample>> = {

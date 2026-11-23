@@ -6,7 +6,7 @@ import type OGrafExample from './index';
  * the result holds. The show leaves it up for a while and takes it out, and the next lap loads it afresh.
  */
 export const RACE_TELEMETRY: Partial<ComponentProps<typeof OGrafExample>> = {
-  show: [{after: 113000, cue: 'take-out'}],
+  show: {beats: [{after: 113000, cue: 'take-out'}]},
   formFields: ['title', 'captions'],
   landscapeFullscreen: true,
   sources: (

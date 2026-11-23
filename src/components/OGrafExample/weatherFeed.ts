@@ -18,7 +18,11 @@ const RETRY_MS = 60_000;
 /** The last forecast this page fetched, and when. */
 let last: {cities: unknown; at: number} | undefined;
 
-export function startWeatherFeed(player: Sender, signal: AbortSignal): void {
+/**
+ * Starts the feed. Its promise settles when the first try is over: the forecast is in the graphic, or it
+ * could not be had now and the graphic keeps the one it was built with.
+ */
+export function startWeatherFeed(player: Sender, signal: AbortSignal): Promise<void> {
   let timer: number | undefined;
   const send = async ({cities, at}: {cities: unknown; at: number}) => {
     await player.update({cities});
@@ -44,7 +48,8 @@ export function startWeatherFeed(player: Sender, signal: AbortSignal): void {
   signal.addEventListener('abort', () => window.clearTimeout(timer));
   const age = last ? Date.now() - last.at : Infinity;
   if (last && age < REFRESH_MS) {
-    send(last).catch(() => undefined);
     timer = window.setTimeout(run, REFRESH_MS - age);
-  } else void run();
+    return send(last).catch(() => undefined);
+  }
+  return run();
 }

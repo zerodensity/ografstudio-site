@@ -18,5 +18,7 @@ const jury = (after: number): ShowBeat[] => [
  * board out. The next lap starts on a fresh board, with the low scores landing by themselves.
  */
 export const RANKINGS: Partial<ComponentProps<typeof OGrafExample>> = {
-  show: [...jury(2500), ...jury(5500), ...jury(5500), ...jury(5500), ...jury(5500), {after: 10000, cue: 'take-out'}],
+  show: {
+    beats: [...jury(2500), ...jury(5500), ...jury(5500), ...jury(5500), ...jury(5500), {after: 10000, cue: 'take-out'}],
+  },
 };
