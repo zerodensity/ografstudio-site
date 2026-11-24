@@ -200,8 +200,6 @@ export const examples: Example[] = [
     image: '/img/examples/dino-run.png',
     level: 'Advanced',
     tags: ['Animation', 'Sound', 'Value maps', 'Rules'],
-    // A cartoon with sound that plays by itself: on /examples, not in the homepage's controls.
-    notOnHomepage: true,
     origin: {
       model: 'Claude Fable 5.2',
       generationTime: 'About 1 hour 30 minutes',

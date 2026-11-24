@@ -8,13 +8,14 @@ image: /img/share/dino-run.jpg?v=1
 import ExampleOrigin from '@site/src/components/ExampleOrigin';
 import ExampleTags from '@site/src/components/ExampleTags';
 import OGrafExample from '@site/src/components/OGrafExample';
+import {DINO_RUN} from '@site/src/components/OGrafExample/dinoRun';
 
 <ExampleTags slug="dino-run" />
 
 The cartoon starts by itself. It has sound, which a browser keeps off until you press something on
 the page: press **Replay** to hear it from the start.
 
-<OGrafExample slug="dino-run" poster="/img/examples/dino-run-first.webp" landscapeFullscreen />
+<OGrafExample slug="dino-run" {...DINO_RUN} />
 
 <ExampleOrigin slug="dino-run" />
 

@@ -6,6 +6,7 @@ import Heading from '@theme/Heading';
 import {LevelTag} from '@site/src/components/ExampleTags';
 import HeroReel from '@site/src/components/HeroReel';
 import OGrafExample from '@site/src/components/OGrafExample';
+import {DINO_RUN} from '@site/src/components/OGrafExample/dinoRun';
 import {LIVE_MARKETS} from '@site/src/components/OGrafExample/liveMarkets';
 import {RACE_TELEMETRY} from '@site/src/components/OGrafExample/raceTelemetry';
 import {RANKINGS} from '@site/src/components/OGrafExample/rankings';
@@ -200,6 +201,7 @@ function SectionHead({
 const controls = examples.filter((item) => !item.notOnHomepage && !item.unlisted);
 /** What an example needs from its player beyond its name. */
 const PLAYER_PROPS: Record<string, Partial<ComponentProps<typeof OGrafExample>>> = {
+  'dino-run': DINO_RUN,
   'live-markets': LIVE_MARKETS,
   'race-telemetry': RACE_TELEMETRY,
   rankings: RANKINGS,
