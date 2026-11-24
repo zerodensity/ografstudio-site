@@ -1,4 +1,4 @@
-// Builds "Dino Run": a 15 second runner cartoon. An orange dinosaur runs, jumps and ducks, eats an old blue one
+// Builds "Pixel Art Dinosaur Animation": a 15 second runner cartoon. An orange dinosaur runs, jumps and ducks, eats an old blue one
 // and grows, then runs into a wall. The camera pulls back: the wall is the first letter of a huge "OGraf".
 //   node build.mjs
 import { call, apply, fresh, scene, settled, add } from './studio.mjs';
@@ -716,12 +716,12 @@ const prepared = await apply(
     {
       type: 'set_project_metadata',
       id: 'dino-run',
-      name: 'Dino Run',
+      name: 'Pixel Art Dinosaur Animation',
       description: 'A 15 second runner cartoon: an orange dinosaur with a Viking helmet and a V on its side runs, jumps and ducks, eats an old blue dinosaur with a C, a cane and a cowboy hat, grows, then runs into a wall that turns out to be a huge OGraf. A pterodactyl with an X flies along, hits the wall too and is stuck there by its beak, flapping. In the pull-back a meteor comes into the sky. Time of day, landscape and the animals\' colours are settings, and it has sound effects.',
       supportsRealTime: true,
       supportsNonRealTime: false, // it has sound, and sound cues play in real time only
     },
-    { type: 'set_composition', name: 'Dino Run', width: W, height: H, frameRate: FPS, updateTransitionFrames: 0 },
+    { type: 'set_composition', name: 'Pixel Art Dinosaur Animation', width: W, height: H, frameRate: FPS, updateTransitionFrames: 0 },
     { type: 'set_transition', transitionId: toStep.id, durationFrames: END },
     { type: 'set_transition', transitionId: toEnd.id, durationFrames: OUT },
     ...FIELDS,

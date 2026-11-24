@@ -195,7 +195,7 @@ export const examples: Example[] = [
   },
   {
     slug: 'dino-run',
-    title: 'Dino Run',
+    title: 'Pixel Art Dinosaur Animation',
     summary: 'A 15-second pixel-art cartoon with sound: a dinosaur runs, jumps, eats and grows, until the camera pulls back on a surprise.',
     image: '/img/examples/dino-run.png',
     level: 'Advanced',

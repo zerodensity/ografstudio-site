@@ -120,12 +120,12 @@
     "actions": 4
   },
   "dino-run": {
-    "name": "Dino Run",
+    "name": "Pixel Art Dinosaur Animation",
     "manifest": "/graphics/dino-run/dino-run-rt.ograf.json",
     "download": "/graphics/dino-run.ograf.zip",
-    "bytes": 981441,
+    "bytes": 981452,
     "source": "/graphics/dino-run.ogs",
-    "sourceBytes": 3897516,
+    "sourceBytes": 3897556,
     "fields": 5,
     "actions": 0
   },

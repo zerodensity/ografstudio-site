@@ -7,7 +7,7 @@ saves the editable source here (`<slug>.ogs`) and exports the certified package 
 clock, countdown, scoreboard, lower-third, ticker, bug, rankings, live-markets, weather, weather-strap,
 race-telemetry, shader-background and lottie-pulse.
 
-Dino Run has its own script, in `dino-run/`: see its part below.
+Pixel Art Dinosaur Animation has its own script, in `dino-run/`: see its part below.
 
 `npm run graphics` copies each `.ogs` to `static/graphics`, and the player's caption links to it. The
 prompt, model and generation time on each page live in `origin` in `src/data/examples.ts`. The time
@@ -145,8 +145,10 @@ A few things to know before changing it:
 - To replay another race, change `SOURCE` and `LAPS` in the snapshot script and the two cars in the
   story, then check the map's rotation and the corner names in the art.
 
-Dino Run is a 15-second cartoon, not a broadcast graphic: a pixel-art runner with sound, built to show
-how far a timeline goes. Its scripts are in `dino-run/` and stand apart from `build.mjs`:
+Pixel Art Dinosaur Animation is a 15-second cartoon, not a broadcast graphic: a pixel-art runner with
+sound, built to show how far a timeline goes. It was called Dino Run until 2026-11-24, and its files,
+its page and its package keep that name: `dino-run`. Its scripts are in `dino-run/` and stand apart
+from `build.mjs`:
 
 ```bash
 node examples-src/dino-run/build.mjs
@@ -176,13 +178,13 @@ A few things to know before changing it:
   any Take in. A broadcast graphic starts empty; a cartoon that plays by itself on a page should not
   open on an empty frame. The page shows `static/img/examples/dino-run-first.webp`, a picture of that
   first frame, until the graphic has loaded: take it again if the opening changes.
-- The package on the site is exported from a Studio with four runtime changes, the last two still
-  in review when it was made:
+- The package on the site is exported from OGraf Studio 0.40.0, the first version with four runtime
+  changes it needs:
   [taking a graphic in again](https://github.com/zerodensity/ograf-studio/pull/113),
   [data updates during a Take in](https://github.com/zerodensity/ograf-studio/pull/114),
   [sounds passed while the tab was hidden](https://github.com/zerodensity/ograf-studio/pull/115) and
   [a Take out during a Take in](https://github.com/zerodensity/ograf-studio/pull/116). Exported from
-  a Studio without them, a second Take in jumps to the last picture with every sound at once, a
+  an earlier Studio, a second Take in jumps to the last picture with every sound at once, a
   setting changed while the cartoon plays shows only when it has stopped, the sounds passed while
   the tab was hidden all start when it is shown again, and a Take out waits for the cartoon to end.
 

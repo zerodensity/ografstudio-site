@@ -1,7 +1,7 @@
 {
   "documentVersion": 37,
   "id": "dino-run",
-  "name": "Dino Run",
+  "name": "Pixel Art Dinosaur Animation",
   "description": "A 15 second runner cartoon: an orange dinosaur with a Viking helmet and a V on its side runs, jumps and ducks, eats an old blue dinosaur with a C, a cane and a cowboy hat, grows, then runs into a wall that turns out to be a huge OGraf. A pterodactyl with an X flies along, hits the wall too and is stuck there by its beak, flapping. In the pull-back a meteor comes into the sky. Time of day, landscape and the animals' colours are settings, and it has sound effects.",
   "version": "0.1.0",
   "author": {
@@ -13,7 +13,7 @@
   "compositions": [
     {
       "id": "comp-c3e4e98c-4222-4c31-83d8-1c643898c4ac",
-      "name": "Dino Run",
+      "name": "Pixel Art Dinosaur Animation",
       "width": 1920,
       "height": 1080,
       "backgroundColor": "transparent",
