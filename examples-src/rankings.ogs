@@ -403,7 +403,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [],
           "visualRules": [],
           "motion": {
             "in": {
@@ -417,7 +416,8 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": []
         },
         {
           "id": "layer-df2fa9e6-72f2-4a4b-9008-69c407343223",
@@ -812,7 +812,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [],
           "visualRules": [],
           "motion": {
             "in": {
@@ -826,7 +825,8 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": []
         },
         {
           "id": "layer-8eecb97b-b7c0-4a5d-93b5-3bcd868bbb1f",
@@ -1221,7 +1221,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [],
           "visualRules": [],
           "motion": {
             "in": {
@@ -1235,7 +1234,8 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": []
         },
         {
           "id": "layer-ca255562-5a41-4e41-a0ff-95718e250695",
@@ -1661,12 +1661,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [
-            {
-              "targetProperty": "content",
-              "fieldId": "field-1bb9fedc-9592-48cd-86fd-24d3a970f6ab"
-            }
-          ],
           "visualRules": [],
           "motion": {
             "in": {
@@ -1682,7 +1676,14 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": [
+            {
+              "targetProperty": "content",
+              "fieldId": "field-1bb9fedc-9592-48cd-86fd-24d3a970f6ab",
+              "sourcePath": []
+            }
+          ]
         },
         {
           "id": "layer-6bf4e159-ddf6-4ea7-8236-686aec814da6",
@@ -2108,7 +2109,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [],
           "visualRules": [],
           "motion": {
             "in": {
@@ -2124,7 +2124,8 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": []
         },
         {
           "id": "layer-e18027c0-1592-44b9-b4ba-25c1c6d2d6eb",
@@ -2540,7 +2541,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [],
           "visualRules": [
             {
               "id": "tile-gold",
@@ -2627,7 +2627,8 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": []
         },
         {
           "id": "layer-e151c073-bbeb-4bb4-b63e-d6078829cc65",
@@ -3012,7 +3013,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [],
           "visualRules": [
             {
               "id": "glow-off",
@@ -3046,7 +3046,8 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": []
         },
         {
           "id": "layer-73e4664a-fe55-4580-903f-cc70b9569eb7",
@@ -3460,15 +3461,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [
-            {
-              "targetProperty": "content",
-              "sourcePath": [
-                "place"
-              ],
-              "fieldId": "field-0db76b4c-cb18-4da6-b370-a8c8669abe53"
-            }
-          ],
           "visualRules": [
             {
               "id": "place-medal",
@@ -3506,7 +3498,16 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": [
+            {
+              "targetProperty": "content",
+              "sourcePath": [
+                "place"
+              ],
+              "fieldId": "field-0db76b4c-cb18-4da6-b370-a8c8669abe53"
+            }
+          ]
         },
         {
           "id": "layer-c31b9a28-d785-46cc-b8aa-db05639bd910",
@@ -3885,15 +3886,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [
-            {
-              "targetProperty": "fill",
-              "sourcePath": [
-                "colour"
-              ],
-              "fieldId": "field-0db76b4c-cb18-4da6-b370-a8c8669abe53"
-            }
-          ],
           "visualRules": [],
           "motion": {
             "in": {
@@ -3907,7 +3899,16 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": [
+            {
+              "targetProperty": "fill",
+              "sourcePath": [
+                "colour"
+              ],
+              "fieldId": "field-0db76b4c-cb18-4da6-b370-a8c8669abe53"
+            }
+          ]
         },
         {
           "id": "layer-6f1d2181-47be-4a3f-a9f1-88803bd9f7f8",
@@ -4275,7 +4276,7 @@
           "element": {
             "type": "text",
             "content": "AA",
-            "color": "#ffffff",
+            "color": "#0c0e2b",
             "strokeColor": "transparent",
             "strokeWidth": 0,
             "fontFamily": "Oswald, Arial Narrow, Arial, sans-serif",
@@ -4321,15 +4322,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [
-            {
-              "targetProperty": "content",
-              "sourcePath": [
-                "initials"
-              ],
-              "fieldId": "field-0db76b4c-cb18-4da6-b370-a8c8669abe53"
-            }
-          ],
           "visualRules": [],
           "motion": {
             "in": {
@@ -4343,7 +4335,16 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": [
+            {
+              "targetProperty": "content",
+              "sourcePath": [
+                "initials"
+              ],
+              "fieldId": "field-0db76b4c-cb18-4da6-b370-a8c8669abe53"
+            }
+          ]
         },
         {
           "id": "layer-b56cf35c-4522-4c57-944e-c97e19784999",
@@ -4757,15 +4758,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [
-            {
-              "targetProperty": "content",
-              "sourcePath": [
-                "name"
-              ],
-              "fieldId": "field-0db76b4c-cb18-4da6-b370-a8c8669abe53"
-            }
-          ],
           "visualRules": [
             {
               "id": "name-medal",
@@ -4803,7 +4795,16 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": [
+            {
+              "targetProperty": "content",
+              "sourcePath": [
+                "name"
+              ],
+              "fieldId": "field-0db76b4c-cb18-4da6-b370-a8c8669abe53"
+            }
+          ]
         },
         {
           "id": "layer-163d40dc-313d-4e65-a2d1-835db42ceb76",
@@ -5188,7 +5189,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [],
           "visualRules": [
             {
               "id": "chip-off",
@@ -5240,7 +5240,8 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": []
         },
         {
           "id": "layer-a8ddad2e-1d75-4577-8de0-9a96e66e3322",
@@ -5654,15 +5655,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [
-            {
-              "targetProperty": "content",
-              "sourcePath": [
-                "award"
-              ],
-              "fieldId": "field-0db76b4c-cb18-4da6-b370-a8c8669abe53"
-            }
-          ],
           "visualRules": [
             {
               "id": "award-off",
@@ -5695,7 +5687,16 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": [
+            {
+              "targetProperty": "content",
+              "sourcePath": [
+                "award"
+              ],
+              "fieldId": "field-0db76b4c-cb18-4da6-b370-a8c8669abe53"
+            }
+          ]
         },
         {
           "id": "layer-06ce5b75-425b-4c8b-8946-3ebc96a2b6ca",
@@ -6080,7 +6081,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [],
           "visualRules": [
             {
               "id": "move-off",
@@ -6114,7 +6114,8 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": []
         },
         {
           "id": "layer-38691ee4-d164-4f46-adff-f5289aece39f",
@@ -6497,7 +6498,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [],
           "visualRules": [
             {
               "id": "up-off",
@@ -6531,7 +6531,8 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": []
         },
         {
           "id": "layer-fd9e706d-4b41-4139-9881-388bf596887e",
@@ -6914,7 +6915,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [],
           "visualRules": [
             {
               "id": "down-off",
@@ -6948,7 +6948,8 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": []
         },
         {
           "id": "layer-484fecd7-d0cc-4f13-9fcf-4eef764395f7",
@@ -7362,15 +7363,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [
-            {
-              "targetProperty": "content",
-              "sourcePath": [
-                "moved"
-              ],
-              "fieldId": "field-0db76b4c-cb18-4da6-b370-a8c8669abe53"
-            }
-          ],
           "visualRules": [
             {
               "id": "moved-off",
@@ -7404,7 +7396,16 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": [
+            {
+              "targetProperty": "content",
+              "sourcePath": [
+                "moved"
+              ],
+              "fieldId": "field-0db76b4c-cb18-4da6-b370-a8c8669abe53"
+            }
+          ]
         },
         {
           "id": "layer-c04472b2-c8e6-4fa7-b5a0-4152bdb69ca1",
@@ -7818,15 +7819,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [
-            {
-              "targetProperty": "content",
-              "sourcePath": [
-                "points"
-              ],
-              "fieldId": "field-0db76b4c-cb18-4da6-b370-a8c8669abe53"
-            }
-          ],
           "visualRules": [
             {
               "id": "points-medal",
@@ -7864,7 +7856,16 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": [
+            {
+              "targetProperty": "content",
+              "sourcePath": [
+                "points"
+              ],
+              "fieldId": "field-0db76b4c-cb18-4da6-b370-a8c8669abe53"
+            }
+          ]
         },
         {
           "id": "layer-2b9d96b4-5a01-425d-94ae-f693f9204f23",
@@ -8375,7 +8376,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [],
           "visualRules": [
             {
               "id": "glint-off",
@@ -8406,7 +8406,8 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": []
         },
         {
           "id": "layer-bc36ccde-33d6-44e4-9f6d-87df28fccf12",
@@ -8483,7 +8484,7 @@
                 "x": 108,
                 "y": 1010,
                 "width": 1146,
-                "height": 0,
+                "height": 1,
                 "rotation": 0,
                 "opacity": 1,
                 "transformOriginX": 0.5,
@@ -8498,7 +8499,7 @@
                 "x": 108,
                 "y": 1010,
                 "width": 1146,
-                "height": 0,
+                "height": 1,
                 "rotation": 0,
                 "opacity": 1,
                 "transformOriginX": 0.5,
@@ -8513,7 +8514,7 @@
                 "x": 108,
                 "y": 1010,
                 "width": 1146,
-                "height": 0,
+                "height": 1,
                 "rotation": 0,
                 "opacity": 1,
                 "transformOriginX": 0.5,
@@ -8746,7 +8747,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [],
           "visualRules": [],
           "motion": {
             "in": {
@@ -8756,7 +8756,8 @@
               "easing": "cubic-out"
             },
             "out": null
-          }
+          },
+          "bindings": []
         },
         {
           "id": "layer-fc02933b-4c1e-4c3f-8156-56e70884d958",
@@ -9163,8 +9164,8 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [],
-          "visualRules": []
+          "visualRules": [],
+          "bindings": []
         },
         {
           "id": "layer-1b033aa6-3736-498a-b780-7825e2656429",
@@ -9528,7 +9529,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [],
           "visualRules": [],
           "motion": {
             "in": {
@@ -9542,7 +9542,8 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": []
         },
         {
           "id": "layer-1258540d-4454-4f7f-a1d3-611effe2fe17",
@@ -9937,7 +9938,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [],
           "visualRules": [],
           "motion": {
             "in": {
@@ -9951,7 +9951,8 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": []
         },
         {
           "id": "layer-207fe6fd-1aea-45f6-b87f-6ec5260a3567",
@@ -10346,7 +10347,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [],
           "visualRules": [],
           "motion": {
             "in": {
@@ -10360,7 +10360,8 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": []
         },
         {
           "id": "layer-3ef9a694-1931-4042-be16-99d180bec4f3",
@@ -10786,12 +10787,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [
-            {
-              "targetProperty": "content",
-              "fieldId": "field-711b7e6e-9320-4c84-8eb7-19890c8f1fb9"
-            }
-          ],
           "visualRules": [],
           "motion": {
             "in": {
@@ -10807,7 +10802,14 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": [
+            {
+              "targetProperty": "content",
+              "fieldId": "field-711b7e6e-9320-4c84-8eb7-19890c8f1fb9",
+              "sourcePath": []
+            }
+          ]
         },
         {
           "id": "layer-d9ae895a-54bd-4296-9378-96c1cf61d35d",
@@ -11233,12 +11235,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [
-            {
-              "targetProperty": "content",
-              "fieldId": "field-88f3e95d-d6d9-40dd-9c83-f816a1ed0f12"
-            }
-          ],
           "visualRules": [],
           "motion": {
             "in": {
@@ -11254,7 +11250,14 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": [
+            {
+              "targetProperty": "content",
+              "fieldId": "field-88f3e95d-d6d9-40dd-9c83-f816a1ed0f12",
+              "sourcePath": []
+            }
+          ]
         },
         {
           "id": "layer-0c3fcff5-c86b-4bf3-9b19-8975f1d8ab5b",
@@ -11680,12 +11683,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [
-            {
-              "targetProperty": "content",
-              "fieldId": "field-01e4e140-9cbf-49be-bfed-9b157a6c9939"
-            }
-          ],
           "visualRules": [],
           "motion": {
             "in": {
@@ -11701,7 +11698,14 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": [
+            {
+              "targetProperty": "content",
+              "fieldId": "field-01e4e140-9cbf-49be-bfed-9b157a6c9939",
+              "sourcePath": []
+            }
+          ]
         },
         {
           "id": "layer-f423c09c-540b-48d1-837f-8f095cdbec1f",
@@ -12098,7 +12102,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [],
           "visualRules": [
             {
               "id": "pip-done",
@@ -12153,7 +12156,8 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": []
         },
         {
           "id": "layer-a1a372b1-a716-4669-ab62-7798bfc440c7",
@@ -12538,7 +12542,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [],
           "visualRules": [
             {
               "id": "ladder-done",
@@ -12591,7 +12594,8 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": []
         },
         {
           "id": "layer-19d66ac0-acda-442e-8166-6c22aa176b4e",
@@ -12959,7 +12963,7 @@
           "element": {
             "type": "text",
             "content": "1",
-            "color": "#5a60a8",
+            "color": "#858bd4",
             "strokeColor": "transparent",
             "strokeWidth": 0,
             "fontFamily": "Oswald, Arial Narrow, Arial, sans-serif",
@@ -13005,15 +13009,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [
-            {
-              "targetProperty": "content",
-              "sourcePath": [
-                "points"
-              ],
-              "fieldId": "field-055d7e0c-39e5-42b5-947f-c657b6d7b440"
-            }
-          ],
           "visualRules": [
             {
               "id": "ladder-points-done",
@@ -13047,7 +13042,16 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": [
+            {
+              "targetProperty": "content",
+              "sourcePath": [
+                "points"
+              ],
+              "fieldId": "field-055d7e0c-39e5-42b5-947f-c657b6d7b440"
+            }
+          ]
         },
         {
           "id": "layer-aaa7d41f-48d0-4e5d-9089-265b22657845",
@@ -13461,15 +13465,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [
-            {
-              "targetProperty": "content",
-              "sourcePath": [
-                "name"
-              ],
-              "fieldId": "field-055d7e0c-39e5-42b5-947f-c657b6d7b440"
-            }
-          ],
           "visualRules": [],
           "motion": {
             "in": {
@@ -13483,7 +13478,16 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": [
+            {
+              "targetProperty": "content",
+              "sourcePath": [
+                "name"
+              ],
+              "fieldId": "field-055d7e0c-39e5-42b5-947f-c657b6d7b440"
+            }
+          ]
         },
         {
           "id": "layer-cc367a34-24b2-43b2-b58f-5950d2009b50",
@@ -13877,7 +13881,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [],
           "visualRules": [
             {
               "id": "top-gold",
@@ -13912,7 +13915,8 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": []
         },
         {
           "id": "layer-d63d6541-0092-4305-b3a9-94383dda3737",
@@ -14423,7 +14427,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [],
           "visualRules": [
             {
               "id": "top-glint-off",
@@ -14454,7 +14457,8 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": []
         },
         {
           "id": "layer-ed41ad5a-16a7-4ad0-b943-d3d5b54a2bfe",
@@ -14846,12 +14850,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [
-            {
-              "targetProperty": "content",
-              "fieldId": "field-4ce9600d-ea3f-40f2-bf36-64152e337028"
-            }
-          ],
           "visualRules": [
             {
               "id": "top-ink-0",
@@ -14881,7 +14879,14 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": [
+            {
+              "targetProperty": "content",
+              "fieldId": "field-4ce9600d-ea3f-40f2-bf36-64152e337028",
+              "sourcePath": []
+            }
+          ]
         },
         {
           "id": "layer-43af0b6d-038d-436a-a152-f234468e4000",
@@ -15227,7 +15232,7 @@
           "element": {
             "type": "text",
             "content": "12 POINTS",
-            "color": "#5a60a8",
+            "color": "#858bd4",
             "strokeColor": "transparent",
             "strokeWidth": 0,
             "fontFamily": "Oswald, Arial Narrow, Arial, sans-serif",
@@ -15273,12 +15278,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [
-            {
-              "targetProperty": "content",
-              "fieldId": "field-7a74c72c-d99e-40e6-b49d-1e85db33e37f"
-            }
-          ],
           "visualRules": [
             {
               "id": "top-ink-1",
@@ -15308,7 +15307,14 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": [
+            {
+              "targetProperty": "content",
+              "fieldId": "field-7a74c72c-d99e-40e6-b49d-1e85db33e37f",
+              "sourcePath": []
+            }
+          ]
         },
         {
           "id": "layer-1842bd51-ee18-4d9c-a3a0-f7ea03e170e7",
@@ -15700,12 +15706,6 @@
           },
           "designTokenBindings": [],
           "componentLink": null,
-          "bindings": [
-            {
-              "targetProperty": "content",
-              "fieldId": "field-f9b6aa48-afce-4a5d-a58b-9c81b30c3395"
-            }
-          ],
           "visualRules": [
             {
               "id": "top-ink-2",
@@ -15735,7 +15735,14 @@
               "durationFrames": 12,
               "easing": "cubic-in"
             }
-          }
+          },
+          "bindings": [
+            {
+              "targetProperty": "content",
+              "fieldId": "field-f9b6aa48-afce-4a5d-a58b-9c81b30c3395",
+              "sourcePath": []
+            }
+          ]
         }
       ],
       "dataFields": [
@@ -17115,8 +17122,10 @@
           },
           "timeoutMs": 1000
         }
-      ]
+      ],
+      "frameCues": []
     }
   ],
-  "shaders": []
+  "shaders": [],
+  "outputLayer": 0
 }

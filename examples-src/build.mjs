@@ -804,6 +804,10 @@ const EXAMPLES = {
       ],
     });
     const style = (size, weight, extra = {}) => ({ font: OSWALD, size, weight, ...extra });
+    /** The colour of the initials on an avatar: at least 5:1 on every contestant's colour below. */
+    const INITIALS = '#0c0e2b';
+    /** A score not given yet: dim, and still at least 3.6:1 on the jury's plate and on the top score's tile. */
+    const WAITING = '#858bd4';
 
     const CONTESTANTS = [
       ['mk', 'Mira Kolar', '#ff5d73'],
@@ -991,7 +995,8 @@ const EXAMPLES = {
           transform: { x: R.x + 80, y: R.y + 8, width: 48, height: 48 },
           element: { fill: '#5b6bff', strokeWidth: 0 },
         },
-        text('Row initials', [R.x + 80, R.y + 8, 48, 48], 'AA', style(20, 700, { align: 'center' })),
+        // Navy, not white: the avatars are bright, and white read at 1.7:1 to 3.7:1 on them.
+        text('Row initials', [R.x + 80, R.y + 8, 48, 48], 'AA', style(20, 700, { align: 'center', color: INITIALS })),
         text('Row name', [R.x + 142, R.y, 560, R.h], 'Contestant', style(34, 500)),
         rect('Row chip', [R.x + 716, R.y + 10, 92, 44], '#0c0e2b', 22),
         text('Row award', [R.x + 716, R.y + 10, 92, 44], '+12', style(28, 700, { align: 'center' })),
@@ -1060,7 +1065,7 @@ const EXAMPLES = {
         text('Jury name', [SIDE.x + 28, SIDE.y + 56, 478, 80], 'Lisbon', style(62, 700)),
         rect('Pip', [SIDE.x + 28, SIDE.y + 142, 52, 8], '#3a3f8f', 4),
         rect('Ladder plate', [SIDE.x + 28, SIDE.y + 166, 478, 46], '#ffffff0a', 8),
-        text('Ladder points', [SIDE.x + 28, SIDE.y + 166, 66, 46], '1', style(28, 700, { align: 'center', color: '#5a60a8' })),
+        text('Ladder points', [SIDE.x + 28, SIDE.y + 166, 66, 46], '1', style(28, 700, { align: 'center', color: WAITING })),
         text('Ladder name', [SIDE.x + 104, SIDE.y + 166, 392, 46], '', style(28, 500)),
         rect('Top tile', [SIDE.x + 28, SIDE.y + 648, 478, 300], grad(TILE, 180), 14),
         {
@@ -1071,7 +1076,7 @@ const EXAMPLES = {
           element: { fill: glint(110), borderRadius: 14, strokeWidth: 0 },
         },
         text('Top caption', [SIDE.x + 48, SIDE.y + 664, 438, 44], 'THE TOP SCORE', style(28, 600, { ls: 3, align: 'center', color: SOFT })),
-        text('Top value', [SIDE.x + 48, SIDE.y + 708, 438, 124], '12 POINTS', style(92, 700, { align: 'center', color: '#5a60a8' })),
+        text('Top value', [SIDE.x + 48, SIDE.y + 708, 438, 124], '12 POINTS', style(92, 700, { align: 'center', color: WAITING })),
         text('Top name', [SIDE.x + 48, SIDE.y + 846, 438, 86], '', style(58, 700, { align: 'center' })),
         bind('Jury status', [{ fieldKey: 'jury_status', targetProperty: 'content' }]),
         bind('Jury name', [{ fieldKey: 'jury_name', targetProperty: 'content' }]),
