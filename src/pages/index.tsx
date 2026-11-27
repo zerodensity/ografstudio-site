@@ -153,11 +153,13 @@ function Proof(): ReactNode {
     <section className={styles.proof} aria-label="At a glance">
       <div className={styles.proofInner}>
         <Link to="/announcements/best-of-show-ibc-2026" className={styles.proofAward}>
+          {/* Twice the size it is shown at; the full-size badge is on the announcement's page. */}
           <img
-            src={useBaseUrl('/img/tvbeurope-best-of-show-ibc-2026.png')}
+            src={useBaseUrl('/img/tvbeurope-best-of-show-ibc-2026-128.webp')}
             alt="TVBEurope Best of Show award, IBC 2026"
             width={64}
             height={56}
+            loading="lazy"
           />
           <span>
             <strong>Winner</strong>

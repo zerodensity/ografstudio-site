@@ -92,6 +92,12 @@ const COMMUNITY_SLIDE = SLIDES.findIndex((slide) => slide.id === 'community');
 const LINKEDIN_GROUP = 'https://www.linkedin.com/groups/40618425/';
 /** The reel's first frame, for image search and for a reader who doesn't see it. */
 const POSTER_ALT = 'Broadcast graphics made in OGraf Studio';
+/** The stage's width: the full column when the page stacks, about two thirds of the window beside the rundown. */
+const POSTER_SIZES = '(max-width: 1100px) 100vw, 66vw';
+/** How long the reel's start waits for the page to go quiet once the poster is on screen. */
+const QUIET_WAIT_MS = 2000;
+/** Names the poster in the browser's element timing entries. */
+const POSTER_TIMING = 'reel-poster';
 // JOIN_BUTTON in carousel/build.mjs, on the 1920x1080 canvas: x, y, width, height.
 const JOIN_BUTTON = [96, 672, 590, 112];
 const PARK_AFTER_MS = 4000;
@@ -182,13 +188,72 @@ function useTimecode(ref: React.RefObject<HTMLElement | null>, running: boolean)
   }, [ref, running]);
 }
 
+/**
+ * The reel's first frame, which stands in for the live graphic until its first slide is in. It is the page's
+ * largest paint, so the browser fetches it first and in the size the screen needs. The 640 and 960 files are
+ * scaled copies of the full one: remake them when it changes.
+ */
+function Poster({hidden = false, ref}: {hidden?: boolean; ref?: React.Ref<HTMLImageElement>}): ReactNode {
+  const full = useBaseUrl('/img/feature-reel-poster.webp');
+  const medium = useBaseUrl('/img/feature-reel-poster-960.webp');
+  const small = useBaseUrl('/img/feature-reel-poster-640.webp');
+  return (
+    <img
+      ref={ref}
+      className={`${styles.poster} ${hidden ? styles.posterHidden : ''}`}
+      src={full}
+      srcSet={`${small} 640w, ${medium} 960w, ${full} 1600w`}
+      sizes={POSTER_SIZES}
+      alt={POSTER_ALT}
+      width={1600}
+      height={900}
+      fetchPriority="high"
+      // Lets posterShown() learn when the browser has put it on the screen. React's types don't know the attribute.
+      {...{elementtiming: POSTER_TIMING}}
+    />
+  );
+}
+
+/**
+ * Resolves once the poster is on the screen and the page has had a quiet moment. The reel's package is a large
+ * script that sets up WebGL: started with the page, it held the screen back, and the poster, the page's largest
+ * paint, appeared long after it was ready.
+ */
+async function posterShown(poster: HTMLImageElement): Promise<void> {
+  const loaded = await poster.decode().then(
+    () => true,
+    // A poster that can't load is never shown, and must not keep the reel from starting.
+    () => false,
+  );
+  if (loaded && PerformanceObserver.supportedEntryTypes.includes('element')) {
+    // Chromium reports the moment the picture reached the screen. A frame can be drawn well before it is shown.
+    await new Promise<void>((resolve) => {
+      const observer = new PerformanceObserver((list) => {
+        if (!list.getEntries().some((entry) => (entry as PerformanceEntry & {element?: Element | null}).element === poster))
+          return;
+        observer.disconnect();
+        resolve();
+      });
+      observer.observe({type: 'element', buffered: true});
+    });
+  } else {
+    // Other browsers: two frames on, the first one with the poster has been handed over.
+    await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+  }
+  await new Promise<void>((resolve) => {
+    // Safari has no requestIdleCallback.
+    if (typeof window.requestIdleCallback === 'function')
+      window.requestIdleCallback(() => resolve(), {timeout: QUIET_WAIT_MS});
+    else window.setTimeout(resolve, 0);
+  });
+}
+
 function Reel(): ReactNode {
   const entry = graphics['feature-reel'];
   const playerUrl = useBaseUrl('/player/ograf-player.js');
   const manifestUrl = useBaseUrl(entry.manifest);
   const downloadUrl = useBaseUrl(entry.download);
   const sourceUrl = useBaseUrl(entry.source ?? '');
-  const posterUrl = useBaseUrl('/img/feature-reel-poster.webp');
   const soundIn = useBaseUrl('/audio/reel-media-in.mp3');
   const soundOut = useBaseUrl('/audio/reel-media-out.mp3');
   const soundFilm = useBaseUrl('/audio/reel-media-film.mp3');
@@ -197,6 +262,7 @@ function Reel(): ReactNode {
   const originRef = useRef<HTMLDialogElement>(null);
   const barTimer = useRef<number | undefined>(undefined);
   const stageRef = useRef<HTMLDivElement>(null);
+  const posterRef = useRef<HTMLImageElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const timecodeRef = useRef<HTMLSpanElement>(null);
   const playerRef = useRef<OGrafPlayer | null>(null);
@@ -379,6 +445,8 @@ function Reel(): ReactNode {
     const abort = new AbortController();
     let player: OGrafPlayer | null = null;
     (async () => {
+      await posterShown(posterRef.current!);
+      if (abort.signal.aborted) return;
       defineReelCameraSource();
       const module = (await import(/* webpackIgnore: true */ playerUrl)) as PlayerModule;
       player = await module.mountOGrafGraphic({
@@ -720,13 +788,7 @@ function Reel(): ReactNode {
           onPointerLeave={(event) => event.pointerType === 'mouse' && setHold('pointer', false)}
           onPointerMove={onStagePointerMove}
           onPointerDown={onStagePointerDown}>
-          <img
-            className={`${styles.poster} ${revealed ? styles.posterHidden : ''}`}
-            src={posterUrl}
-            alt={POSTER_ALT}
-            width={1600}
-            height={900}
-          />
+          <Poster ref={posterRef} hidden={revealed} />
           <BackdropCamera />
           <div ref={viewportRef} className={`${styles.viewport} ${revealed ? '' : styles.viewportWaiting}`} />
           {onAir && active === MEDIA_INDEX && !sound && (
@@ -873,14 +935,13 @@ function Reel(): ReactNode {
  * lays it out, so the reel doesn't pop into an empty space as the page loads.
  */
 function ReelPlaceholder(): ReactNode {
-  const posterUrl = useBaseUrl('/img/feature-reel-poster.webp');
   return (
     <div className={styles.reel}>
       <div className={styles.deck}>
         <div className={styles.console} />
         <div className={styles.stageShell}>
           <div className={styles.stage}>
-            <img className={styles.poster} src={posterUrl} alt={POSTER_ALT} width={1600} height={900} />
+            <Poster />
           </div>
         </div>
       </div>

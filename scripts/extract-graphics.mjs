@@ -6,6 +6,10 @@
 //                                  src/data/graphics.json             manifest URLs for pages
 //   examples-src/<slug>.ogs    ->  static/graphics/<slug>.ogs         editable source to download
 //
+// The home page's reel also gets its script minified in the extracted copy: Studio exports the playback
+// code unminified, and that copy is what every visitor's browser fetches and runs. The download stays as
+// Studio exported it.
+//
 // Runs before `npm start` and `npm run build`. Add a graphic by exporting it from Studio with
 // Export .ograf.zip and saving it as graphics/<slug>.ograf.zip.
 
@@ -13,12 +17,30 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {unzipSync} from 'fflate';
+import {minify} from 'terser';
 
 const siteRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const sourceDir = path.join(siteRoot, 'graphics');
 const editableDirs = [path.join(siteRoot, 'examples-src'), path.join(siteRoot, 'carousel')];
 const outputDir = path.join(siteRoot, 'static', 'graphics');
 const indexFile = path.join(siteRoot, 'src', 'data', 'graphics.json');
+/** Packages a page plays as it opens, whose script is minified for the browser. */
+const MINIFIED_FOR_THE_PAGE = new Set(['feature-reel']);
+
+/** Minifies an exported package's module in place. Licence comments stay, as the licences require. */
+async function minifyModule(file) {
+  const source = fs.readFileSync(file, 'utf8');
+  const {code} = await minify(source, {
+    module: true,
+    // Custom element and error names are read from classes and functions at run time.
+    keep_classnames: true,
+    keep_fnames: true,
+    format: {comments: /licen[cs]e|copyright|@preserve|^!/i},
+  });
+  if (!code) throw new Error(`${file}: the minifier returned nothing.`);
+  fs.writeFileSync(file, code);
+  return [source.length, code.length];
+}
 
 fs.rmSync(outputDir, {recursive: true, force: true});
 fs.mkdirSync(outputDir, {recursive: true});
@@ -49,6 +71,10 @@ for (const zipName of zips) {
   }
   if (!manifestFile) throw new Error(`${zipName}: no .ograf.json manifest at the top level.`);
   const manifest = JSON.parse(fs.readFileSync(path.join(packageDir, manifestFile), 'utf8'));
+  if (MINIFIED_FOR_THE_PAGE.has(slug)) {
+    const [before, after] = await minifyModule(path.resolve(packageDir, manifest.main));
+    console.log(`Minified ${slug}'s script for the page: ${Math.round(before / 1024)} KiB to ${Math.round(after / 1024)} KiB.`);
+  }
   fs.copyFileSync(path.join(sourceDir, zipName), path.join(outputDir, zipName));
   // The editable project, from whichever build script saved one.
   const sourceFile = editableDirs.map((dir) => path.join(dir, `${slug}.ogs`)).find((file) => fs.existsSync(file));

@@ -458,3 +458,8 @@
   color: var(--site-muted);
   font-size: 0.82rem;
 }
+
+/* Inside a sentence, colour alone doesn't mark a link for everyone. */
+.caption a {
+  text-decoration: underline;
+}

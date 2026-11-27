@@ -81,6 +81,8 @@ h3 {
 
 .footer__copyright a {
   color: #b9c8ee;
+  /* Inside a sentence, colour alone doesn't mark a link for everyone. */
+  text-decoration: underline;
 }
 
 /* Navbar: the OGraf wordmark carries the brand, "Studio" follows it. */

@@ -4,6 +4,8 @@
   --reel-line: rgb(12 22 48 / 14%);
   --reel-muted: #5b6478;
   --reel-tally: #e8352b;
+  /* The tally red as small text: dark enough to read on the active row (4.8:1). */
+  --reel-tally-text: #bf2018;
   --reel-preview: #0e9f70;
   --reel-panel: #f6f8fc;
   --reel-hover: #e9eef8;
@@ -19,6 +21,7 @@
   --reel-line: rgb(255 255 255 / 12%);
   --reel-muted: #93a1c1;
   --reel-tally: #ff4238;
+  --reel-tally-text: #ff4238;
   --reel-preview: #2fe6a8;
   --reel-panel: #0a0f1f;
   --reel-hover: #111a33;
@@ -688,7 +691,7 @@
 }
 
 .cueActive .cueNumber {
-  color: var(--reel-tally);
+  color: var(--reel-tally-text);
 }
 
 .cueActive .cueLine {
