@@ -96,6 +96,17 @@
   text-transform: uppercase;
 }
 
+/* The h1 only groups its two lines; each line keeps its own type. */
+.heroHeading {
+  margin: 0;
+  font: inherit;
+  letter-spacing: normal;
+}
+
+.heroHeading > span {
+  display: block;
+}
+
 .heroTitle {
   margin: 0;
   color: var(--home-strong);

@@ -121,12 +121,15 @@ function Hero(): ReactNode {
     <header className={styles.hero}>
       <div className={styles.heroInner}>
         <div className={styles.heroHead}>
-          <div>
-            <p className={styles.eyebrow}>The open-source editor for EBU OGraf</p>
-            <Heading as="h1" className={styles.heroTitle}>
+          {/* One heading in two lines: the small line carries the product's name, so a search
+              engine reads the name in the page's main heading and not only in its title. */}
+          <Heading as="h1" className={styles.heroHeading}>
+            {/* As long as the line it replaced, so it still fits one line on a 360px phone. */}
+            <span className={styles.eyebrow}>OGraf Studio, the open-source editor</span>{' '}
+            <span className={styles.heroTitle}>
               Broadcast graphics, designed for EBU's OGraf Standard
-            </Heading>
-          </div>
+            </span>
+          </Heading>
           <div>
             <p className={styles.heroLead}>
               Animated, data-driven lower thirds, scoreboards, tickers and full-screen graphics,
