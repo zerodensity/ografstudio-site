@@ -1,7 +1,7 @@
 ---
 title: "The Properties pane"
 sidebar_position: 2
-description: "Properties lists what most layers need first: Transform, Animate In / Out, the layer's content, Data Bindings, Effects, and a summary of its Visual rules with Open Rules."
+description: "Properties lists what most layers need first: Transform, Animate In / Out, the layer's content, Data Bindings, Effects, and a summary of its Visual rules…"
 custom_edit_url: "https://github.com/zerodensity/ograf-studio/blob/stable/docs/USER_GUIDE.md"
 ---
 

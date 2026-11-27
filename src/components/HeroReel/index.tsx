@@ -90,6 +90,8 @@ const MEDIA_INDEX = SLIDES.findIndex((slide) => slide.id === 'media');
 const MONITOR_SLIDE = SLIDES.findIndex((slide) => slide.id === 'transitions');
 const COMMUNITY_SLIDE = SLIDES.findIndex((slide) => slide.id === 'community');
 const LINKEDIN_GROUP = 'https://www.linkedin.com/groups/40618425/';
+/** The reel's first frame, for image search and for a reader who doesn't see it. */
+const POSTER_ALT = 'Broadcast graphics made in OGraf Studio';
 // JOIN_BUTTON in carousel/build.mjs, on the 1920x1080 canvas: x, y, width, height.
 const JOIN_BUTTON = [96, 672, 590, 112];
 const PARK_AFTER_MS = 4000;
@@ -721,7 +723,7 @@ function Reel(): ReactNode {
           <img
             className={`${styles.poster} ${revealed ? styles.posterHidden : ''}`}
             src={posterUrl}
-            alt=""
+            alt={POSTER_ALT}
             width={1600}
             height={900}
           />
@@ -878,7 +880,7 @@ function ReelPlaceholder(): ReactNode {
         <div className={styles.console} />
         <div className={styles.stageShell}>
           <div className={styles.stage}>
-            <img className={styles.poster} src={posterUrl} alt="" width={1600} height={900} />
+            <img className={styles.poster} src={posterUrl} alt={POSTER_ALT} width={1600} height={900} />
           </div>
         </div>
       </div>

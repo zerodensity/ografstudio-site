@@ -2,7 +2,7 @@
 title: "Shader pack plugins"
 sidebar_label: "Shader plugins"
 sidebar_position: 5
-description: "Both ZD News Shader packs are included offline and enabled on fresh installations. To add another:"
+description: "Both ZD News Shader packs are included offline and enabled on fresh installations."
 custom_edit_url: "https://github.com/zerodensity/ograf-studio/blob/stable/docs/SHADER_PLUGINS.md"
 ---
 

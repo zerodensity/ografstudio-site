@@ -1,0 +1,10 @@
+.head {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--ifm-toc-border-color);
+}
+
+.head p {
+  margin: 0;
+  color: var(--ifm-color-emphasis-700);
+}

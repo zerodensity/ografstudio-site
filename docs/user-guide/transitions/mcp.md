@@ -1,7 +1,7 @@
 ---
 title: "Transitions through MCP"
 sidebar_position: 7
-description: "MCP integrations can apply a complete definition through ografupdatetemplateset with operation:{type:\"settransitionlogic\",definition} and the latest set revision."
+description: "MCP integrations can apply a complete definition through ografupdatetemplateset with operation:{type:\"settransitionlogic\",definition} and the latest set…"
 custom_edit_url: "https://github.com/zerodensity/ograf-studio/blob/stable/docs/USER_GUIDE.md"
 ---
 

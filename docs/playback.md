@@ -2,7 +2,7 @@
 title: "OGraf frame playback"
 sidebar_label: "Playback"
 sidebar_position: 4
-description: "Studio preview and exported graphics use the same frame player and compiled scene sampler. Animation tracks and easing remain part of the scene model; the player advances the composition position and applies the sampled pose to the DOM."
+description: "Studio preview and exported graphics use the same frame player and compiled scene sampler."
 custom_edit_url: "https://github.com/zerodensity/ograf-studio/blob/stable/docs/PLAYBACK.md"
 ---
 

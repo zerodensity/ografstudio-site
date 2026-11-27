@@ -2,7 +2,7 @@
 title: "Animation preset plugins"
 sidebar_label: "Animation plugins"
 sidebar_position: 6
-description: "Animation plugins add named whole-layer entrances and exits without adding runtime JavaScript. Studio validates their JSON, maps normalized key times into the chosen In/Out window, and creates normal editable property tracks. Chart renderer plugins remain a separate plugin kind."
+description: "Animation plugins add named whole-layer entrances and exits without adding runtime JavaScript."
 custom_edit_url: "https://github.com/zerodensity/ograf-studio/blob/stable/docs/ANIMATION_PLUGINS.md"
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "Visual rules"
 sidebar_position: 7
-description: "Open the dockable Rules pane from the Window menu to edit ordered rules across the composition; optionally filter to the selected object, which also lists rules on other objects…"
+description: "Open the dockable Rules pane from the Window menu to edit ordered rules across the composition; optionally filter to the selected object, which also lists…"
 custom_edit_url: "https://github.com/zerodensity/ograf-studio/blob/stable/docs/USER_GUIDE.md"
 ---
 

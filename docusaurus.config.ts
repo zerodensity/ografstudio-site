@@ -1,8 +1,11 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import type * as Blog from '@docusaurus/plugin-content-blog';
 import type * as Docs from '@docusaurus/plugin-content-docs';
+import type * as Sitemap from '@docusaurus/plugin-sitemap';
 import {DOWNLOADS, RELEASES_URL} from './src/data/downloads';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
@@ -18,6 +21,39 @@ const withoutLandingPage: Docs.Options['sidebarItemsGenerator'] = async ({
   (await defaultSidebarItemsGenerator(args)).filter(
     (item) => !(item.type === 'doc' && item.id === 'index'),
   );
+
+/** Lists of posts by tag, author, year or page. The posts are what a search should find, not these. */
+const LIST_PAGES = ['announcements', 'releases'].flatMap((blog) =>
+  ['tags', 'authors', 'archive', 'page'].flatMap((list) => [`/${blog}/${list}/`, `/${blog}/${list}/**`]),
+);
+
+/**
+ * Gives each announcement and release note its date in the sitemap: the day in its file name, or the
+ * `last_update.date` in its front matter when it was changed since. Other pages get none, because nothing
+ * here records when their text last changed: the deploy has no Git history, and an import rewrites every
+ * imported page. Google uses a date only when it is accurate.
+ */
+const datedPosts: NonNullable<Sitemap.Options['createSitemapItems']> = async ({
+  defaultCreateSitemapItems,
+  routes,
+  ...rest
+}) => {
+  // `lastmod: 'date'` below would have every page's date read from Git. A null here turns that off per page.
+  const undated = routes.map((route) => ({...route, metadata: {...route.metadata, lastUpdatedAt: null}}));
+  const items = await defaultCreateSitemapItems({routes: undated, ...rest});
+  const sources = new Map(
+    routes.map((route) => [route.path.replace(/\/$/, ''), route.metadata?.sourceFilePath]),
+  );
+  return items.map((item) => {
+    const source = sources.get(new URL(item.url).pathname.replace(/\/$/, ''));
+    const published = /^(?:announcements|releases)\/(\d{4}-\d{2}-\d{2})-/.exec(source ?? '')?.[1];
+    if (!source || !published) return item;
+    const changed = /^last_update:\s+date:\s*(\d{4}-\d{2}-\d{2})/m.exec(
+      fs.readFileSync(path.join(__dirname, source), 'utf8'),
+    )?.[1];
+    return {...item, lastmod: changed ?? published};
+  });
+};
 
 const config: Config = {
   title: 'OGraf Studio',
@@ -37,7 +73,10 @@ const config: Config = {
 
   url: 'https://ografstudio.org',
   baseUrl: '/',
-  trailingSlash: false,
+  // Every page is a folder with an index.html, so an address works with or without its final slash: GitHub
+  // Pages redirects the bare one. With `false` a page is `name.html`, and `name/` is a 404 wherever a folder of
+  // that name exists.
+  trailingSlash: true,
 
   // GitHub Pages deployment; see README.md. The custom domain is set in the repository's settings.
   organizationName: 'zerodensity',
@@ -74,7 +113,8 @@ const config: Config = {
           path: 'announcements',
           routeBasePath: 'announcements',
           blogTitle: 'Announcements',
-          blogDescription: 'News about OGraf Studio.',
+          blogDescription:
+            'News from the OGraf Studio project: new versions, awards, and what is new in the open-source editor for EBU OGraf broadcast graphics.',
           blogSidebarTitle: 'Recent announcements',
           showReadingTime: true,
           feedOptions: {
@@ -93,6 +133,15 @@ const config: Config = {
         // container sends to Google Analytics; manage tags at tagmanager.google.com.
         googleTagManager: {
           containerId: 'GTM-WDKNF4GH',
+        },
+        sitemap: {
+          // Google ignores both.
+          changefreq: null,
+          priority: null,
+          // Writes a date as a day, without a time nobody recorded. `datedPosts` decides which pages get one.
+          lastmod: 'date',
+          ignorePatterns: LIST_PAGES,
+          createSitemapItems: datedPosts,
         },
       } satisfies Preset.Options,
     ],
@@ -126,7 +175,8 @@ const config: Config = {
         path: 'releases',
         routeBasePath: 'releases',
         blogTitle: "What's new",
-        blogDescription: 'Release notes for every OGraf Studio version.',
+        blogDescription:
+          'Release notes for every OGraf Studio version: what changed in the editor, the OGraf playback runtime and AI authoring.',
         blogSidebarTitle: 'All releases',
         blogSidebarCount: 'ALL',
         postsPerPage: 10,
@@ -151,6 +201,7 @@ const config: Config = {
         name: 'keywords',
         content: 'OGraf, EBU, broadcast graphics, lower thirds, playout, MCP',
       },
+      {property: 'og:site_name', content: 'OGraf Studio'},
     ],
     colorMode: {
       defaultMode: 'dark',

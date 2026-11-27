@@ -2,7 +2,7 @@
 title: "AI authoring"
 sidebar_label: "AI authoring"
 sidebar_position: 3
-description: "Standalone output metadata uses setprojectmetadata.outputLayer. For a coordinated package, call ografupdatetemplateset with {type:\"setoutputlayer\",outputLayer:100} and the current opaque set revision. The package root and each standalone template have independent values; neither is an inherited canvas setting. Both accept signed JavaScript safe integers, default to zero, and export as top-level vlayer. Read resolved values from project metadata and the template-set snapshot. templateSets.outputLayers capabilities describe the contract."
+description: "Standalone output metadata uses setprojectmetadata.outputLayer."
 custom_edit_url: "https://github.com/zerodensity/ograf-studio/blob/stable/docs/AI_AUTHORING.md"
 ---
 

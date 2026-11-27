@@ -889,7 +889,7 @@ function LivePlayer({
         onPointerMove={expanded ? wakeBar : undefined}>
         <BackdropCamera />
         {/* Pressing on the picture, such as on a button a graphic has inside it, takes over from the show. */}
-        {posterShown && <img className={styles.poster} src={posterUrl} alt="" />}
+        {posterShown && <img className={styles.poster} src={posterUrl} alt={`${entry.name}: the first frame`} />}
         <div ref={viewportRef} className={styles.viewport} onPointerDown={showOn ? takeOver : undefined} />
         {status === 'loading' && (
           <div className={styles.overlay}>
@@ -1051,7 +1051,14 @@ export default function OGrafExample(props: Props): ReactNode {
   // and the browser asks for it as it reads the page, ahead of the styles and scripts.
   const served = (
     <div className={styles.frame}>
-      {props.poster && <img className={styles.poster} src={posterUrl} alt="" fetchPriority="high" />}
+      {props.poster && (
+        <img
+          className={styles.poster}
+          src={posterUrl}
+          alt={`${graphics[props.slug].name}: the first frame`}
+          fetchPriority="high"
+        />
+      )}
     </div>
   );
   return <BrowserOnly fallback={served}>{() => <LivePlayer {...props} />}</BrowserOnly>;

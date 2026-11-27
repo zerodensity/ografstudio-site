@@ -2,7 +2,7 @@
 title: "Single-template lifecycle preview"
 sidebar_label: "Lifecycle preview"
 sidebar_position: 2
-description: "The preview plays the exported graphic the way playout does: Take In ▶ plays it in, Next ⏭ continues to the next Step (or out after the last one), ⏮ Back returns one Step, and T…"
+description: "The preview plays the exported graphic the way playout does: Take In ▶ plays it in, Next ⏭ continues to the next Step (or out after the last one), ⏮ Back…"
 custom_edit_url: "https://github.com/zerodensity/ograf-studio/blob/stable/docs/USER_GUIDE.md"
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "Data update transitions"
 sidebar_position: 6
-description: "Set the composition's Update animation duration and Data arrives mid-fade policy, then choose a per-layer style under Properties → Advanced → Data change transition."
+description: "Set the composition's Update animation duration and Data arrives mid-fade policy, then choose a per-layer style under Properties → Advanced → Data change…"
 custom_edit_url: "https://github.com/zerodensity/ograf-studio/blob/stable/docs/USER_GUIDE.md"
 ---
 

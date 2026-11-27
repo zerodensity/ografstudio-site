@@ -1,7 +1,7 @@
 ---
 title: "Moving dialog windows"
 sidebar_position: 7
-description: "Studio's dialog windows, including Settings & Preferences, save/export, resource editors, plugin details, Camera Settings, workspace management, keyboard shortcuts and import wi…"
+description: "Studio's dialog windows, including Settings & Preferences, save/export, resource editors, plugin details, Camera Settings, workspace management, keyboard…"
 custom_edit_url: "https://github.com/zerodensity/ograf-studio/blob/stable/docs/USER_GUIDE.md"
 ---
 

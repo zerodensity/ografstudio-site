@@ -2,7 +2,7 @@
 title: "Renderer plugins"
 sidebar_label: "Renderer plugins"
 sidebar_position: 7
-description: "Open Window → Plugins and choose Charts in the dockable pane beside Timeline. Select a provider's plugin card, its exact version and a chart template below the card to create a chart pinned to that provider, not to a different global default. The gear inside a plugin card and Manage plugin… open File → Preferences → OGraf Studio → Plugins. Disabled versions remain manageable. Chart drawing requires an enabled, trusted renderer. Studio includes Chart.js as the initial new-chart default, and each created chart retains its chosen version and digest."
+description: "Open Window → Plugins and choose Charts in the dockable pane beside Timeline."
 custom_edit_url: "https://github.com/zerodensity/ograf-studio/blob/stable/docs/RENDERER_PLUGINS.md"
 ---
 

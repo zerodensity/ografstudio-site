@@ -2,7 +2,7 @@
 title: "Development and deployment"
 sidebar_label: "Development"
 sidebar_position: 8
-description: "These instructions describe the 0.40.1 source line. See the release notes."
+description: "These instructions describe the 0.40.1 source line."
 custom_edit_url: "https://github.com/zerodensity/ograf-studio/blob/stable/docs/DEVELOPMENT.md"
 ---
 

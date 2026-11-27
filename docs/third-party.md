@@ -2,7 +2,7 @@
 title: "Third-party assets"
 sidebar_label: "Third-party credits"
 sidebar_position: 20
-description: "The editor uses the official white OGraf wordmark from the European Broadcasting Union's OGraf repository. The README title uses the official colour wordmark in light mode and white wordmark in dark mode."
+description: "The editor uses the official white OGraf wordmark from the European Broadcasting Union's OGraf repository."
 custom_edit_url: "https://github.com/zerodensity/ograf-studio/blob/stable/docs/THIRD_PARTY.md"
 ---
 

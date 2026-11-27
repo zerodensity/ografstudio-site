@@ -9,7 +9,7 @@ function ExampleCard({example}: {example: Example}): ReactNode {
   return (
     <Link className={styles.card} to={`/examples/${example.slug}`}>
       <div className={styles.thumb}>
-        <img className={styles.thumbImg} src={useBaseUrl(example.image)} alt="" loading="lazy" />
+        <img className={styles.thumbImg} src={useBaseUrl(example.image)} alt={`${example.title}: a frame of the graphic`} loading="lazy" />
       </div>
       <div className={styles.body}>
         <h3 className={styles.title}>{example.title}</h3>

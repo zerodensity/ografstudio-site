@@ -387,7 +387,7 @@ function writeDoc(doc) {
       title: title ?? doc.label ?? doc.slug,
       sidebar_label: doc.label,
       sidebar_position: doc.position,
-      description: firstParagraph(content),
+      description: shortDescription(content),
       custom_edit_url: `${PUBLIC_REPOSITORY}/blob/${args.allowUnpublished ? 'stable' : ref}/${doc.from}`,
     }) +
     '\n' +
@@ -501,12 +501,14 @@ function userGuideLink(anchor) {
   return link ?? USER_GUIDE_ROUTE;
 }
 
-/** The first sentence, short enough for the cards on a section's page and for search results. */
+/** The first sentence, short enough for the cards on a section's page and for a search result's snippet. */
 function shortDescription(body) {
   const paragraph = firstParagraph(body);
   if (!paragraph) return undefined;
   const sentence = /^.*?[.!?](?=\s|$)/.exec(paragraph)?.[0] ?? paragraph;
-  return sentence.length > 180 ? `${sentence.slice(0, 177).trimEnd()}…` : sentence;
+  if (sentence.length <= 160) return sentence;
+  // Cut between words, so the snippet doesn't end inside one.
+  return `${sentence.slice(0, 158).replace(/\s+\S*$/, '')}…`;
 }
 
 function writeUserGuide(doc) {
@@ -621,7 +623,7 @@ function writeRelease(release) {
       title: title ?? `OGraf Studio ${release.version}`,
       slug: `/${release.version}`,
       date: release.date,
-      description: firstParagraph(content) ?? `Release notes for OGraf Studio ${release.version}.`,
+      description: shortDescription(content) ?? `Release notes for OGraf Studio ${release.version}.`,
       authors: ['ograf-studio'],
       tags: [release.prerelease ? 'release-candidate' : 'release'],
     }) +

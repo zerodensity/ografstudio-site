@@ -1,4 +1,5 @@
 import {useState, type ComponentProps, type ReactNode} from 'react';
+import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import Layout from '@theme/Layout';
@@ -151,7 +152,7 @@ function Proof(): ReactNode {
         <Link to="/announcements/best-of-show-ibc-2026" className={styles.proofAward}>
           <img
             src={useBaseUrl('/img/tvbeurope-best-of-show-ibc-2026.png')}
-            alt=""
+            alt="TVBEurope Best of Show award, IBC 2026"
             width={64}
             height={56}
           />
@@ -196,6 +197,17 @@ function SectionHead({
     </div>
   );
 }
+
+/** The name leads, as a search result's title is cut from its end. */
+const HOME_TITLE = 'OGraf Studio: open-source editor for EBU OGraf broadcast graphics';
+/** Google takes the name it shows beside the site's results from this, on the home page only. */
+const WEBSITE = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'OGraf Studio',
+  alternateName: 'ografstudio.org',
+  url: 'https://ografstudio.org/',
+};
 
 // An unlisted example is reached only by its link, so the homepage doesn't offer it either.
 const controls = examples.filter((item) => !item.notOnHomepage && !item.unlisted);
@@ -376,9 +388,12 @@ function CallToAction(): ReactNode {
 
 export default function Home(): ReactNode {
   return (
-    <Layout
-      title="Broadcast graphics, designed for EBU's OGraf Standard"
-      description="OGraf Studio is an open-source, browser-based editor for EBU OGraf-compatible broadcast graphics: lower thirds, scoreboards, tickers and full-screen graphics.">
+    <Layout description="OGraf Studio is an open-source, browser-based editor for EBU OGraf-compatible broadcast graphics: lower thirds, scoreboards, tickers and full-screen graphics.">
+      <Head>
+        <title>{HOME_TITLE}</title>
+        <meta property="og:title" content={HOME_TITLE} />
+        <script type="application/ld+json">{JSON.stringify(WEBSITE)}</script>
+      </Head>
       <div className={styles.home}>
         <Hero />
         <main>
